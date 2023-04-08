@@ -57,7 +57,7 @@ export const Cuerpo = () => {
           <div>
           <ListGroup>
             {documentosFiltrados.map(documento => (
-              <ListGroup.Item key={documento.id}>
+              <ListGroup.Item key={documento.uid}>
                 {documento.nombre}
               </ListGroup.Item>
             ))}
@@ -71,7 +71,7 @@ export const Cuerpo = () => {
         <div>
           <ListGroup>
             {documentosFiltrados2.map(documento => (
-              <ListGroup.Item key={documento.id}>
+              <ListGroup.Item key={documento.uid}>
                 {documento.nombre}
               </ListGroup.Item>
             ))}

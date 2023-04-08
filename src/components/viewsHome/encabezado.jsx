@@ -50,10 +50,10 @@ export const Encabezado = () => {
 
       {!isLoggedIn && <Link className="btn light" to="/" href="#">Inicio</Link>}
       {/* Aquí se muestra el botón de Iniciar sesión solo si el usuario no ha iniciado sesión */}
-      {!isLoggedIn && <Link className="btn light" to="/info-usuario" href="#">Iniciar sesión</Link>}
+      {!isLoggedIn && <Link className="btn light" to="/login" href="#">Iniciar sesión</Link>}
 
       {/* Aquí se muestra el botón de Registrarse solo si el usuario no ha iniciado sesión */}
-      {!isLoggedIn && <Nav.Link href="#">Registrarse</Nav.Link>}
+      {!isLoggedIn && <Link className="btn light" to="/registrarse" href="#">Registrarse</Link>}
     </Nav>
         {/* <Nav>
           <Link className="btn light" to="/" href="#">Inicio</Link>

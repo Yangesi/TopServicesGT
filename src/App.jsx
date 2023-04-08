@@ -5,9 +5,8 @@ import { Encabezado } from './components/viewsHome/encabezado'
 import { Cuerpo } from './components/viewsHome/cuerpo'
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
-import InfoUsuario from './components/infoUsuario'
-import { HomeAdmin } from './components/viewsAdmin/homeAdmin'
-import { HomeEmpleador } from './components/viewsEmpleador/homeEmpleador'
+import { Login } from '../screens/login'
+import { Registrarse } from '../screens/registrarse'
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -18,7 +17,8 @@ function App() {
       <Route path='/' element={<Encabezado/>}>
       <Route path='/' element={<Cuerpo/>}/>
       
-      <Route path='/info-usuario' element={<InfoUsuario/>}/>
+      <Route path='/login' element={<Login/>}/>
+      <Route path='/registrarse' element={<Registrarse/>}/>
         
       </Route>
     </Routes>
