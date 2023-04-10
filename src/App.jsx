@@ -7,6 +7,7 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 import { Login } from '../screens/login'
 import { Registrarse } from '../screens/registrarse'
+import ValidacionEmail from '../screens/forms/validacionEmail'
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
       
       <Route path='/login' element={<Login/>}/>
       <Route path='/registrarse' element={<Registrarse/>}/>
+      <Route path='/prueba' element={<ValidacionEmail/>}/>
         
       </Route>
     </Routes>

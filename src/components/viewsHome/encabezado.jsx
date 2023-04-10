@@ -54,6 +54,9 @@ export const Encabezado = () => {
 
       {/* Aquí se muestra el botón de Registrarse solo si el usuario no ha iniciado sesión */}
       {!isLoggedIn && <Link className="btn light" to="/registrarse" href="#">Registrarse</Link>}
+
+      {/* este enlace solo es para probar componentes */}
+      {!isLoggedIn && <Link className="btn light" to="/prueba" href="#">Prueba</Link>}
     </Nav>
         {/* <Nav>
           <Link className="btn light" to="/" href="#">Inicio</Link>
