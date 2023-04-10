@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Modal, Form, Button } from "react-bootstrap";
 
 export const Empleador = ({ show, handleClose }) => {
@@ -14,6 +14,10 @@ export const Empleador = ({ show, handleClose }) => {
       const togglePasswordVisibility = () => {
           setShowPassword(!showPassword);
       };
+
+      useEffect(() => {
+        setShowPassword(false); // Restablecer el estado del botón al cerrar el modal
+      }, [show]);
 
       const [password, setPassword] = useState("");
       const [confirmPassword, setConfirmPassword] = useState("");
@@ -36,6 +40,10 @@ export const Empleador = ({ show, handleClose }) => {
           setPasswordMatch(true);
         }
       };
+
+      useEffect(() => {
+        setPasswordMatch(password === confirmPassword && password !== "");
+    }, [password, confirmPassword]);
     
   return (
     <>
@@ -133,10 +141,10 @@ export const Empleador = ({ show, handleClose }) => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            Close
+            Cerrar
           </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
+          <Button variant="primary" disabled={!passwordMatch} onClick={handleClose}>
+            Registrarse
           </Button>
         </Modal.Footer>
       </Modal>

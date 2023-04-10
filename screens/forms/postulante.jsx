@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Modal, Form, Button } from "react-bootstrap";
 
 export const Postulante = ({ show, handleClose }) => {
@@ -9,15 +9,21 @@ export const Postulante = ({ show, handleClose }) => {
         handleClose();
       };
 
+      //modulo de contrase;as, parte 1 - boton para mostrar o escoder password
     const [showPassword, setShowPassword] = useState(false);
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
 
+    useEffect(() => {
+      setShowPassword(false); // Restablecer el estado del botón al cerrar el modal
+    }, [show]);
+
+    //validacion de contrase;as, validar que sean iguales 
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [passwordMatch, setPasswordMatch] = useState(false); // Nuevo estado
+    const [passwordMatch, setPasswordMatch] = useState(null); // Nuevo estado
     
     const handlePasswordChange = (e) => {
       setPassword(e.target.value);
@@ -36,7 +42,10 @@ export const Postulante = ({ show, handleClose }) => {
         setPasswordMatch(true);
       }
     };
- 
+
+    useEffect(() => {
+      setPasswordMatch(password === confirmPassword && password !== "");
+  }, [password, confirmPassword]);
 
   return (
     <>
@@ -74,6 +83,7 @@ export const Postulante = ({ show, handleClose }) => {
             <Form.Label>Contraseña</Form.Label>
             <Form.Control
             type={showPassword ? 'text' : 'password'}
+            defaultValue={password}
             onChange={handlePasswordChange}
             />
             </Form.Group>
@@ -81,6 +91,7 @@ export const Postulante = ({ show, handleClose }) => {
             <Form.Label>Confirmar contraseña</Form.Label>
             <Form.Control
             type={showPassword ? 'text' : 'password'}
+            defaultValue={confirmPassword}
             onChange={handleConfirmPasswordChange}
             />
             <Form.Text>
@@ -112,7 +123,6 @@ export const Postulante = ({ show, handleClose }) => {
               <Form.Label>Pretensión salarial</Form.Label>
               <Form.Control
                 type="number"
-                value={0}
                 placeholder="Ingresa tu pretensión salarial"
                 
               />
@@ -141,10 +151,10 @@ export const Postulante = ({ show, handleClose }) => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            Close
+            Cerrar
           </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
+          <Button variant="primary" disabled={!passwordMatch} onClick={handleClose}>
+            Registrarse
           </Button>
         </Modal.Footer>
       </Modal>
