@@ -1,12 +1,38 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Form, Button } from "react-bootstrap";
 
-import { app } from '../../src/firebase/configFirebase';
+import { app, db } from '../../src/firebase/configFirebase';
 import { getAuth } from 'firebase/auth';
 import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail } from 'firebase/auth';
+import { addDoc, collection } from "firebase/firestore";
 
 export const Postulante = ({ show, handleClose }) => {
+// los estados de los datos generales del postulante 
+  const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
+  const [telefono, setTelefono] = useState('');
+  const [pretension, setPretension] = useState(0);
+  const [comentario, setComentario] = useState('');
 
+  const handleNombreChange = (e) => {
+    setNombre(e.target.value);
+  };
+  
+  const handleApellidoChange = (e) => {
+    setApellido(e.target.value);
+  };
+
+  const handleTelefonoChange = (e) => {
+    setTelefono(e.target.value);
+  };
+
+  const handlePretensionChange = (e) => {
+    setPretension(e.target.value);
+  };
+
+  const handleComentarioChange = (e) => {
+    setComentario(e.target.value);
+  };
 //los estados del email
   const [email, setEmail] = useState('');
   const [error, setError] = useState(null);
@@ -38,6 +64,16 @@ export const Postulante = ({ show, handleClose }) => {
     const handleConfirmPasswordChange = (e) => {
       setConfirmPassword(e.target.value);
     }; 
+
+  //validacion de email 
+  useEffect(() => {
+    if (email.trim().length === 0) {
+      setIsEmailValidated(false);
+    } else {
+      handleEmailValidation();
+    }
+  }, [email])
+
     
  //validacion de contrase;as, validar que sean iguales 
     useEffect(() => {
@@ -52,6 +88,7 @@ export const Postulante = ({ show, handleClose }) => {
       if (signInMethods.length > 0) {
         setError('Este correo electrónico ya está registrado');
         console.log('Error de handleEmailValidation, el correo ya esta registrado');
+        setIsEmailValidated(false);
       } else {
         setIsEmailValidated(true);
         setError(null);
@@ -60,12 +97,14 @@ export const Postulante = ({ show, handleClose }) => {
     } catch (error) {
       setError('Hubo un error al validar el correo electrónico');
       console.log('Error de handleEmailValidation');
+      setIsEmailValidated(false);
     }
   };
 
 //constante submit donde se obtienen y se envian los datos del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(e.target.Nombre.value)
     console.log(email)
     console.log(password)
     // Aquí iría el código para enviar la información del formulario al servidor
@@ -80,6 +119,30 @@ export const Postulante = ({ show, handleClose }) => {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       setError(null);
       console.log('Usuario registrado:', userCredential.user);
+      console.log('UID Usuario registrado:', userCredential.user.uid);
+      //en este try se registran datos del usuario en Cloud Firestore
+      const UIDusuario = userCredential.user.uid;
+      try {
+        const docRef = await addDoc(collection(db, "usuario"), {
+          email,
+          rol: "Postulante", 
+          uid: UIDusuario
+        });
+
+        const docRefP = await addDoc(collection(db, "postulante"), {
+          nombre,
+          apellido,
+          telefono, 
+          pretension,
+          comentario, 
+          uid: UIDusuario
+        });
+        
+        console.log("Document Postulante written with ID: ", docRefP.id);
+        console.log("Document written with ID: ", docRef.id);
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
     } catch (error) {
       setError('Hubo un error al registrar al usuario');
       console.log('Error al registrar el usuario')
@@ -88,9 +151,33 @@ export const Postulante = ({ show, handleClose }) => {
     handleClose();
   };
 
+  //obtiene el email del form y se establece en el usestate
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
+
+  //limpiar los input cuando se ejecute el button de cerrar
+  const handleClearInputs = () => {
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+  }
+
+
+// Add a  document with a generated ID.
+const handleSubmitDocument = async () => {
+  console.log();
+try {
+  const docRef = await addDoc(collection(db, "usuario"), {
+    email,
+    rol: "Postulante"
+  });
+
+  console.log("Document written with ID: ", docRef.id);
+} catch (e) {
+  console.error("Error adding document: ", e);
+}
+}
 
   return (
     <>
@@ -106,6 +193,7 @@ export const Postulante = ({ show, handleClose }) => {
                 type="text"
                 placeholder="Ingresa tu nombre"
                 autoFocus
+                onChange={handleNombreChange}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="Apellido">
@@ -113,6 +201,7 @@ export const Postulante = ({ show, handleClose }) => {
               <Form.Control
                 type="text"
                 placeholder="Ingresa tu apellido"
+                onChange={handleApellidoChange}
                 
               />
             </Form.Group>
@@ -128,10 +217,10 @@ export const Postulante = ({ show, handleClose }) => {
               />
               <Form.Text>
                 {isEmailValidated === false && (
-                <span style={{ color: "red" }}>Ya existe una cuenta con esta direccion de correo electrónico</span>
+                <span style={{ color: "red" }}>Ingrese una direccion de correo electrónico valida</span>
                 )}
                 {isEmailValidated === true && (
-                <span style={{ color: "green" }}>Correo validado</span>
+                <span style={{ color: "green" }}>Correo válido</span>
                 )}
             </Form.Text>
             </Form.Group>
@@ -153,7 +242,7 @@ export const Postulante = ({ show, handleClose }) => {
             />
             <Form.Text>
                 {passwordMatch === false && (
-                <span style={{ color: "red" }}>Las contraseñas no coinciden</span>
+                <span style={{ color: "red" }}>Las contraseñas no coinciden, recuerde colocar una contraseña segura (Su contraseña debe contener como minimo 8 caracteres, incluyendo mayúsculas, minúsculas, símbolos y números)</span>
                 )}
                 {passwordMatch === true && (
                 <span style={{ color: "green" }}>Las contraseñas coinciden</span>
@@ -173,6 +262,7 @@ export const Postulante = ({ show, handleClose }) => {
               <Form.Control
                 type="text"
                 placeholder="Ingresa tu teléfono"
+                onChange={handleTelefonoChange}
                 
               />
             </Form.Group>
@@ -181,6 +271,7 @@ export const Postulante = ({ show, handleClose }) => {
               <Form.Control
                 type="number"
                 placeholder="Ingresa tu pretensión salarial"
+                onChange={handlePretensionChange}
                 
               />
             </Form.Group>
@@ -194,8 +285,13 @@ export const Postulante = ({ show, handleClose }) => {
               className="mb-3"
               controlId="exampleForm.ControlTextarea1"
             >
-              <Form.Label>Example textarea</Form.Label>
-              <Form.Control as="textarea" rows={3} />
+              <Form.Label>Comentario</Form.Label>
+              <Form.Control 
+              as="textarea" 
+              rows={3} 
+              placeholder="Déjanos tu comentario"
+              onChange={handleComentarioChange}
+              />
             </Form.Group>
             <Form.Group className="mb-3" controlId="Areas_Postularse">
           <Form.Label>Areas a postularse</Form.Label>
@@ -204,15 +300,17 @@ export const Postulante = ({ show, handleClose }) => {
             <option value="empleador">Empleador</option>
           </Form.Control>
         </Form.Group>
-        <Button variant="secondary" onClick={handleClose}>
+        <div className="d-flex justify-content-end">
+          <Button className='m-1' variant="secondary" onClick={() => {
+              handleClose();
+              handleClearInputs();
+            }}>
             Cerrar
           </Button>
-          <Button type="submit" variant="primary" disabled={!passwordMatch} onClick={() => { handleClose; handleEmailValidation; }}>
+          <Button type="submit" className='m-1' variant="primary" disabled={!passwordMatch || !isEmailValidated} onClick={handleClose}>
             Registrarse
           </Button>
-          <button type="button" onClick={handleEmailValidation}>
-            Validar correo electrónico
-          </button>
+        </div>
           </Form>
         </Modal.Body>
         <Modal.Footer>

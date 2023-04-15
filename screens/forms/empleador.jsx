@@ -1,49 +1,166 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Form, Button } from "react-bootstrap";
 
+import { app, db } from '../../src/firebase/configFirebase';
+import { getAuth } from 'firebase/auth';
+import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail } from 'firebase/auth';
+import { addDoc, collection } from "firebase/firestore";
+
 export const Empleador = ({ show, handleClose }) => {
+  // los estados de los datos generales del postulante 
+  const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
+  const [telefono, setTelefono] = useState('');
+  const [razon, setRazon] = useState(0);
+  const [comentario, setComentario] = useState('');
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Aquí iría el código para enviar la información del formulario al servidor
-        handleClose();
-      };
+  const handleNombreChange = (e) => {
+    setNombre(e.target.value);
+  };
+  
+  const handleApellidoChange = (e) => {
+    setApellido(e.target.value);
+  };
 
-      const [showPassword, setShowPassword] = useState(false);
+  const handleTelefonoChange = (e) => {
+    setTelefono(e.target.value);
+  };
 
-      const togglePasswordVisibility = () => {
-          setShowPassword(!showPassword);
-      };
+  const handleRazonChange = (e) => {
+    setRazon(e.target.value);
+  };
 
-      useEffect(() => {
-        setShowPassword(false); // Restablecer el estado del botón al cerrar el modal
-      }, [show]);
+  const handleComentarioChange = (e) => {
+    setComentario(e.target.value);
+  };
 
-      const [password, setPassword] = useState("");
-      const [confirmPassword, setConfirmPassword] = useState("");
-      const [passwordMatch, setPasswordMatch] = useState(false); // Nuevo estado
+    //los estados del email
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState(null);
+  const [isEmailValidated, setIsEmailValidated] = useState(false);
+
+  const auth = getAuth(app);
+
+      //modulo de contrase;as, parte 1 - boton para mostrar o escoder password
+    const [showPassword, setShowPassword] = useState(false);
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+
+    useEffect(() => {
+      setShowPassword(false); // Restablecer el estado del botón al cerrar el modal
+    }, [show]);
+
+   //los estados de las contrase;as
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [passwordMatch, setPasswordMatch] = useState(false); // Nuevo estado
+    
+    //estableciendo los valores de las password
+    const handlePasswordChange = (e) => {
+      setPassword(e.target.value);
+    };
+    
+    const handleConfirmPasswordChange = (e) => {
+      setConfirmPassword(e.target.value);
+    }; 
+
+  //validacion de email 
+  useEffect(() => {
+    if (email.trim().length === 0) {
+      setIsEmailValidated(false);
+    } else {
+      handleEmailValidation();
+    }
+  }, [email])
+
+    
+ //validacion de contrase;as, validar que sean iguales 
+    useEffect(() => {
+      const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&+#=(){}[\]<>|\\/^~`,.;:_-])[A-Za-z\d@$!%*?&+#=(){}[\]<>|\\/^~`,.;:_-]{8,}$/;
+      setPasswordMatch(password === confirmPassword && password !== "" && passwordRegex.test(password));
+  }, [password, confirmPassword]);
+
+//validacion del email para verificar si ya existe una cuenta en firebase con ese email
+  const handleEmailValidation = async () => {
+    try {
+      const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+      if (signInMethods.length > 0) {
+        setError('Este correo electrónico ya está registrado');
+        console.log('Error de handleEmailValidation, el correo ya esta registrado');
+        setIsEmailValidated(false);
+      } else {
+        setIsEmailValidated(true);
+        setError(null);
+        console.log('todo ok con handleEmailValidation');
+      }
+    } catch (error) {
+      setError('Hubo un error al validar el correo electrónico');
+      console.log('Error de handleEmailValidation');
+      setIsEmailValidated(false);
+    }
+  };
+
+//constante submit donde se obtienen y se envian los datos del formulario
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(email)
+    console.log(password)
+    // Aquí iría el código para enviar la información del formulario al servidor
+    //antes de registrar el usuario, verifico la validacion del email
+    if (!isEmailValidated) {
+      setError('Por favor, valide su correo electrónico antes de continuar');
+      console.log('error al validar email');
+      return;
+    }
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      setError(null);
+      console.log('Usuario registrado:', userCredential.user);
+      console.log('UID Usuario registrado:', userCredential.user.uid);
+      //en este try se registran datos del usuario en Cloud Firestore
+      const UIDusuario = userCredential.user.uid;
+      try {
+        const docRef = await addDoc(collection(db, "usuario"), {
+          email,
+          rol: "Empleador", 
+          uid: UIDusuario
+        });
+
+        const docRefE = await addDoc(collection(db, "empleador"), {
+          nombre,
+          apellido,
+          telefono, 
+          razon,
+          comentario, 
+          uid: UIDusuario
+        });
       
-      const handlePasswordChange = (e) => {
-        setPassword(e.target.value);
-        if (confirmPassword !== "" && e.target.value !== confirmPassword) {
-          setPasswordMatch(false);
-        } else {
-          setPasswordMatch(true);
-        }
-      };
-      
-      const handleConfirmPasswordChange = (e) => {
-        setConfirmPassword(e.target.value);
-        if (password !== "" && e.target.value !== password) {
-          setPasswordMatch(false);
-        } else {
-          setPasswordMatch(true);
-        }
-      };
+        console.log("Document Postulante written with ID: ", docRefE.id);
+        console.log("Document written with ID: ", docRef.id);
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+    } catch (error) {
+      setError('Hubo un error al registrar al usuario');
+      console.log('Error al registrar el usuario')
+    }
 
-      useEffect(() => {
-        setPasswordMatch(password === confirmPassword && password !== "");
-    }, [password, confirmPassword]);
+    handleClose();
+  };
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+   //limpiar los input cuando se ejecute el button de cerrar
+  const handleClearInputs = () => {
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+  }
     
   return (
     <>
@@ -59,6 +176,7 @@ export const Empleador = ({ show, handleClose }) => {
                 type="text"
                 placeholder="Ingresa tu nombre"
                 autoFocus
+                onChange={handleNombreChange}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="Apellido">
@@ -66,14 +184,16 @@ export const Empleador = ({ show, handleClose }) => {
               <Form.Control
                 type="text"
                 placeholder="Ingresa tu apellido"
+                onChange={handleApellidoChange}
                 
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="Apellido">
+            <Form.Group className="mb-3" controlId="Razon">
               <Form.Label>Razón social</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Ingresa tu razón social"
+                onChange={handleRazonChange}
                 
               />
             </Form.Group>
@@ -81,26 +201,40 @@ export const Empleador = ({ show, handleClose }) => {
               <Form.Label>Correo</Form.Label>
               <Form.Control
                 type="email"
+                name="email"
                 placeholder="name@example.com"
-                
+                defaultValue={email}  
+                onChange={handleEmailChange}
+                required  
               />
+              <Form.Text>
+                {isEmailValidated === false && (
+                <span style={{ color: "red" }}>Ingrese una direccion de correo electrónico valida</span>
+                )}
+                {isEmailValidated === true && (
+                <span style={{ color: "green" }}>Correo válido</span>
+                )}
+            </Form.Text>
             </Form.Group>
             <Form.Group className="mb-3" controlId="Password">
             <Form.Label>Contraseña</Form.Label>
             <Form.Control
             type={showPassword ? 'text' : 'password'}
+            defaultValue={password}
             onChange={handlePasswordChange}
+            name="password"
             />
             </Form.Group>
             <Form.Group className="mb-3" controlId="ConfirmarPassword">
             <Form.Label>Confirmar contraseña</Form.Label>
             <Form.Control
             type={showPassword ? 'text' : 'password'}
+            defaultValue={confirmPassword}
             onChange={handleConfirmPasswordChange}
             />
             <Form.Text>
                 {passwordMatch === false && (
-                <span style={{ color: "red" }}>Las contraseñas no coinciden</span>
+                <span style={{ color: "red" }}>Las contraseñas no coinciden, recuerde colocar una contraseña segura (Su contraseña debe contener como minimo 8 caracteres, incluyendo mayúsculas, minúsculas, símbolos y números)</span>
                 )}
                 {passwordMatch === true && (
                 <span style={{ color: "green" }}>Las contraseñas coinciden</span>
@@ -120,6 +254,7 @@ export const Empleador = ({ show, handleClose }) => {
               <Form.Control
                 type="text"
                 placeholder="Ingresa tu teléfono"
+                onChange={handleTelefonoChange}
                 
               />
             </Form.Group>
@@ -127,8 +262,13 @@ export const Empleador = ({ show, handleClose }) => {
               className="mb-3"
               controlId="exampleForm.ControlTextarea1"
             >
-              <Form.Label>Example textarea</Form.Label>
-              <Form.Control as="textarea" rows={3} />
+              <Form.Label>Comentario</Form.Label>
+              <Form.Control 
+              as="textarea" 
+              rows={3} 
+              placeholder="Déjanos tu comentario"
+              onChange={handleComentarioChange}
+              />
             </Form.Group>
             <Form.Group className="mb-3" controlId="Areas_Postularse">
           <Form.Label>Areas a emplear</Form.Label>
@@ -137,15 +277,20 @@ export const Empleador = ({ show, handleClose }) => {
             <option value="empleador">Empleador</option>
           </Form.Control>
         </Form.Group>
+        <div className="d-flex justify-content-end">
+          <Button className='m-1' variant="secondary" onClick={() => {
+              handleClose();
+              handleClearInputs();
+            }}>
+            Cerrar
+          </Button>
+          <Button type="submit" className='m-1' variant="primary" disabled={!passwordMatch || !isEmailValidated} onClick={handleClose}>
+            Registrarse
+          </Button>
+        </div>
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cerrar
-          </Button>
-          <Button variant="primary" disabled={!passwordMatch} onClick={handleClose}>
-            Registrarse
-          </Button>
         </Modal.Footer>
       </Modal>
     </>
