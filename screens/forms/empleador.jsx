@@ -31,10 +31,6 @@ export const Empleador = ({ show, handleClose }) => {
     setRazon(e.target.value);
   };
 
-  const handleComentarioChange = (e) => {
-    setComentario(e.target.value);
-  };
-
     //los estados del email
   const [email, setEmail] = useState('');
   const [error, setError] = useState(null);
@@ -250,18 +246,6 @@ export const Empleador = ({ show, handleClose }) => {
                 placeholder="Ingresa tu teléfono"
                 onChange={handleTelefonoChange}
                 
-              />
-            </Form.Group>
-            <Form.Group
-              className="mb-3"
-              controlId="exampleForm.ControlTextarea1"
-            >
-              <Form.Label>Comentario</Form.Label>
-              <Form.Control 
-              as="textarea" 
-              rows={3} 
-              placeholder="Déjanos tu comentario"
-              onChange={handleComentarioChange}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="Areas_Postularse">

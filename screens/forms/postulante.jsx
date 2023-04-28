@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Form, Button } from "react-bootstrap";
 
-import { app, db } from '../../src/firebase/configFirebase';
+import { app, storage } from '../../src/firebase/configFirebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
 import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail } from 'firebase/auth';
-import { addDoc, collection } from "firebase/firestore";
+
+import { crearPostulante } from '../../helpers/getPostulante'
 
 export const Postulante = ({ show, handleClose }) => {
 // los estados de los datos generales del postulante 
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
-  const [telefono, setTelefono] = useState('');
-  const [pretension, setPretension] = useState(0);
+  const [pretencion_salarial, setPretension] = useState(0);
   const [comentario, setComentario] = useState('');
+  const [cv, setCv] = useState(null);
+
 
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
@@ -22,10 +25,6 @@ export const Postulante = ({ show, handleClose }) => {
     setApellido(e.target.value);
   };
 
-  const handleTelefonoChange = (e) => {
-    setTelefono(e.target.value);
-  };
-
   const handlePretensionChange = (e) => {
     setPretension(e.target.value);
   };
@@ -33,6 +32,12 @@ export const Postulante = ({ show, handleClose }) => {
   const handleComentarioChange = (e) => {
     setComentario(e.target.value);
   };
+
+  const handleCvChange = (event) => {
+    const file = event.target.files[0];
+    setCv(file);
+  }
+  
 //los estados del email
   const [email, setEmail] = useState('');
   const [error, setError] = useState(null);
@@ -122,27 +127,31 @@ export const Postulante = ({ show, handleClose }) => {
       console.log('UID Usuario registrado:', userCredential.user.uid);
       //en este try se registran datos del usuario en Cloud Firestore
       const UIDusuario = userCredential.user.uid;
-      try {
-        const docRef = await addDoc(collection(db, "usuario"), {
-          email,
-          rol: "Postulante", 
-          uid: UIDusuario
+      // subir archivo a Firebase Storage
+      if (cv) {
+        const storageRef = ref(storage, `cv/${cv.name}`);
+        await uploadBytes(storageRef, cv);
+        console.log('archivo subido')
+        getDownloadURL(storageRef)
+        .then((url) => {
+          console.log(`URL de descarga: ${url}`);
+          const cv = url;
+          const codigo_usuario = 2;
+          const datosPostulante = {
+            nombre,
+            apellido,
+            pretencion_salarial,
+            comentario,
+            codigo_usuario, 
+            cv
+          };
+          crearPostulante(datosPostulante);
+        })
+        .catch((error) => {
+          console.error(`Error al obtener la URL de descarga: ${error}`);
         });
-
-        const docRefP = await addDoc(collection(db, "postulante"), {
-          nombre,
-          apellido,
-          telefono, 
-          pretension,
-          comentario, 
-          uid: UIDusuario
-        });
-        
-        console.log("Document Postulante written with ID: ", docRefP.id);
-        console.log("Document written with ID: ", docRef.id);
-      } catch (e) {
-        console.error("Error adding document: ", e);
       }
+
     } catch (error) {
       setError('Hubo un error al registrar al usuario');
       console.log('Error al registrar el usuario')
@@ -162,22 +171,6 @@ export const Postulante = ({ show, handleClose }) => {
       setPassword('');
       setConfirmPassword('');
   }
-
-
-// Add a  document with a generated ID.
-const handleSubmitDocument = async () => {
-  console.log();
-try {
-  const docRef = await addDoc(collection(db, "usuario"), {
-    email,
-    rol: "Postulante"
-  });
-
-  console.log("Document written with ID: ", docRef.id);
-} catch (e) {
-  console.error("Error adding document: ", e);
-}
-}
 
   return (
     <>
@@ -257,15 +250,6 @@ try {
             onChange={togglePasswordVisibility}
             />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="Telefono">
-              <Form.Label>Teléfono</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Ingresa tu teléfono"
-                onChange={handleTelefonoChange}
-                
-              />
-            </Form.Group>
             <Form.Group className="mb-3" controlId="PretensionSalarial">
               <Form.Label>Pretensión salarial</Form.Label>
               <Form.Control
@@ -279,6 +263,7 @@ try {
               <Form.Label>Carga tu CV</Form.Label>
               <Form.Control
                 type="file"
+                onChange={handleCvChange}
               />
             </Form.Group>
             <Form.Group
