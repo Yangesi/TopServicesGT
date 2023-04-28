@@ -1,42 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import logoP from '../../logo/logoP.jpg'
-import { collection, getDocs } from "firebase/firestore";
-import { db } from '../../firebase/configFirebase';
+
 import { Image, ListGroup } from 'react-bootstrap';
 import Accordion from 'react-bootstrap/Accordion';
 import { Piedepagina } from './piedepagina'
+import { getServicios } from '../../../helpers/getServicios'
 
 
 export const Cuerpo = () => {
 
-  const [documentos, setDocumentos] = useState([]);
+  const [servicios, setServicios] = useState([]);
 
   useEffect(() => {
-    const obtenerDatos = async () => {
-      const datos = await getDocs(collection(db, 'servicio'));
-      setDocumentos(datos.docs.map(documento => documento.data()));
+    const obtenerServicios = async () => {
+      const data = await getServicios();
+      setServicios(data);
     };
-
-    obtenerDatos();
+    obtenerServicios();
+    
   }, []);
   
+  const serviciosFiltrados = servicios.filter(servicio => servicio.cod_tipo === 1);
 
-  /* useEffect(() => {
-
-    const obtenerDatos = async()=>{
-      const datos = await getDocs(collection(db, 'administrador'));
-      datos.forEach((documentos)=>{console.log(documentos.data())})
-      //console.log(datos.docs[0].data)
-    }
-
-    obtenerDatos()
-
-  }, []) */
-  
-  const documentosFiltrados = documentos.filter(documento => documento.tipo_servicio === 'Contables y de apoyo administrativo');
-
-  const documentosFiltrados2 = documentos.filter(documento => documento.tipo_servicio === 'Recursos humanos');
+  const serviciosFiltrados2 = servicios.filter(servicio => servicio.cod_tipo === 2);
 
   return (
     <>
@@ -56,9 +43,9 @@ export const Cuerpo = () => {
         <Accordion.Body>
           <div>
           <ListGroup>
-            {documentosFiltrados.map(documento => (
-              <ListGroup.Item key={documento.uid}>
-                {documento.nombre}
+            {serviciosFiltrados.map(servicio => (
+              <ListGroup.Item key={servicio.cod_servicio}>
+                {servicio.nombre}
               </ListGroup.Item>
             ))}
           </ListGroup>
@@ -70,9 +57,9 @@ export const Cuerpo = () => {
         <Accordion.Body>
         <div>
           <ListGroup>
-            {documentosFiltrados2.map(documento => (
-              <ListGroup.Item key={documento.uid}>
-                {documento.nombre}
+            {serviciosFiltrados2.map(servicio => (
+              <ListGroup.Item key={servicio.cod_servicio}>
+                {servicio.nombre}
               </ListGroup.Item>
             ))}
           </ListGroup>

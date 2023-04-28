@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Form, Button } from "react-bootstrap";
 
-import { app, db } from '../../src/firebase/configFirebase';
+import { app } from '../../src/firebase/configFirebase';
 import { getAuth } from 'firebase/auth';
 import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail } from 'firebase/auth';
-import { addDoc, collection } from "firebase/firestore";
+
+import { crearEmpleador } from '../../helpers/getEmpleador'
+
 
 export const Empleador = ({ show, handleClose }) => {
-  // los estados de los datos generales del postulante 
+  // los estados de los datos generales del empleador 
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
-  const [telefono, setTelefono] = useState('');
-  const [razon, setRazon] = useState(0);
-  const [comentario, setComentario] = useState('');
+  const [tel, setTelefono] = useState('');
+  const [razon_social, setRazon] = useState('');
 
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
@@ -120,29 +121,22 @@ export const Empleador = ({ show, handleClose }) => {
       setError(null);
       console.log('Usuario registrado:', userCredential.user);
       console.log('UID Usuario registrado:', userCredential.user.uid);
-      //en este try se registran datos del usuario en Cloud Firestore
+      //en este try se registran datos del empleador a la api
       const UIDusuario = userCredential.user.uid;
-      try {
-        const docRef = await addDoc(collection(db, "usuario"), {
-          email,
-          rol: "Empleador", 
-          uid: UIDusuario
-        });
+      //queda pendiente enviar los datos de usuario a la tabla usuarios
 
-        const docRefE = await addDoc(collection(db, "empleador"), {
-          nombre,
-          apellido,
-          telefono, 
-          razon,
-          comentario, 
-          uid: UIDusuario
-        });
+      //aca se envian los datos al empleador
+      const codigo_usuario = 1;
+      const datosEmpleado = {
+        nombre,
+        apellido,
+        razon_social,
+        tel,
+        codigo_usuario
+      };
       
-        console.log("Document Postulante written with ID: ", docRefE.id);
-        console.log("Document written with ID: ", docRef.id);
-      } catch (e) {
-        console.error("Error adding document: ", e);
-      }
+      crearEmpleador(datosEmpleado);
+      
     } catch (error) {
       setError('Hubo un error al registrar al usuario');
       console.log('Error al registrar el usuario')
