@@ -141,9 +141,9 @@ export const Postulante = ({ show, handleClose }) => {
             nombre,
             apellido,
             pretencion_salarial,
-            comentario,
-            codigo_usuario, 
-            cv
+            comentario, 
+            cv, 
+            email
           };
           crearPostulante(datosPostulante);
         })

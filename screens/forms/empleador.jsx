@@ -6,6 +6,8 @@ import { getAuth } from 'firebase/auth';
 import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail } from 'firebase/auth';
 
 import { crearEmpleador } from '../../helpers/getEmpleador'
+import { getServicios } from '../../helpers/getServicios';
+import { seleccionarServicio } from '../../helpers/getServicioSeleccionado'
 
 
 export const Empleador = ({ show, handleClose }) => {
@@ -29,6 +31,26 @@ export const Empleador = ({ show, handleClose }) => {
 
   const handleRazonChange = (e) => {
     setRazon(e.target.value);
+  };
+  //estado de los servicios y el useEffect para obtener los servicios
+  const [servicios, setServicios] = useState([]);
+  const [checkboxValues, setCheckboxValues] = useState([]);
+
+  useEffect(() => {
+    const obtenerServicios = async () => {
+      const data = await getServicios();
+      setServicios(data);
+    };
+    obtenerServicios();
+  }, []);
+
+  const handleCheckboxChange = (e) => {
+    const value = e.target.value;
+    if (e.target.checked) {
+      setCheckboxValues([...checkboxValues, value]);
+    } else {
+      setCheckboxValues(checkboxValues.filter((val) => val !== value));
+    }
   };
 
     //los estados del email
@@ -122,16 +144,30 @@ export const Empleador = ({ show, handleClose }) => {
       //queda pendiente enviar los datos de usuario a la tabla usuarios
 
       //aca se envian los datos al empleador
-      const codigo_usuario = 1;
       const datosEmpleado = {
         nombre,
         apellido,
         razon_social,
         tel,
-        codigo_usuario
+        email
       };
       
-      crearEmpleador(datosEmpleado);
+      // Guardamos la respuesta de crearEmpleador en una variable
+      const respuestaCrearEmpleador = await crearEmpleador(datosEmpleado);
+
+      // Obtenemos el codigo_usuario de la respuesta
+      const codigo_usuario = respuestaCrearEmpleador.codigo_usuario;
+      console.log(codigo_usuario);
+
+      //envio de los servicios seleccionados
+      const enviarSeleccionServicios = async () => {
+        checkboxValues.forEach(async (value) => {
+          const codigo_servicio = value;
+          await seleccionarServicio(codigo_usuario, codigo_servicio);
+        });
+      };
+      enviarSeleccionServicios();
+      
       
     } catch (error) {
       setError('Hubo un error al registrar al usuario');
@@ -249,12 +285,21 @@ export const Empleador = ({ show, handleClose }) => {
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="Areas_Postularse">
-          <Form.Label>Areas a emplear</Form.Label>
-          <Form.Control as="select">
-            <option value="postulante">Postulante</option>
-            <option value="empleador">Empleador</option>
-          </Form.Control>
-        </Form.Group>
+            <Form.Label>Areas a emplear</Form.Label>
+            
+        {servicios.map((servicio) => (
+          <Form.Check
+            type="checkbox"
+            key={servicio.cod_servicio}
+            id={`check-${servicio.cod_servicio}`}
+            label={servicio.nombre}
+            value={servicio.cod_servicio}
+            onChange={handleCheckboxChange}
+          />
+        ))}
+     
+      <p>Checkbox values: {checkboxValues.join(', ')}</p>
+            </Form.Group>
         <div className="d-flex justify-content-end">
           <Button className='m-1' variant="secondary" onClick={() => {
               handleClose();

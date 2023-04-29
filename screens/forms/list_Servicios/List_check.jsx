@@ -1,32 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import { getUser } from '../../../helpers/getUser'
-
-
+import { getServicios } from '../../../helpers/getServicios';
+import { Form } from 'react-bootstrap';
 
 export const List_check = () => {
-
-  const [users, setUsers] = useState([]);
+  const [servicios, setServicios] = useState([]);
 
   useEffect(() => {
-    const obtenerUsers = async () => {
-      const data = await getUser();
-      setUsers(data);
+    const obtenerServicios = async () => {
+      const data = await getServicios();
+      setServicios(data);
     };
-    obtenerUsers();
+    obtenerServicios();
   }, []);
 
   return (
     <div>
-      <h2>Users</h2>
-      {users.map((user) => (
-        <div key={user.id}>
-          <p>Id: {user.id}</p>
-          <p>Name: {user.name}</p>
-        </div>
-      ))}
+      <h2>Servicios</h2>
+      <Form>
+        {servicios.map((servicio) => (
+          <Form.Check
+            type="checkbox"
+            key={servicio.cod_servicio}
+            id={`check-${servicio.cod_servicio}`}
+            label={servicio.nombre}
+          />
+        ))}
+      </Form>
     </div>
   );
 };
+
 
 
 
