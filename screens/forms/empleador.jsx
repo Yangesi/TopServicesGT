@@ -140,8 +140,7 @@ export const Empleador = ({ show, handleClose }) => {
       console.log('Usuario registrado:', userCredential.user);
       console.log('UID Usuario registrado:', userCredential.user.uid);
       //en este try se registran datos del empleador a la api
-      const UIDusuario = userCredential.user.uid;
-      //queda pendiente enviar los datos de usuario a la tabla usuarios
+      const id = userCredential.user.uid;
 
       //aca se envian los datos al empleador
       const datosEmpleado = {

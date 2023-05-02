@@ -7,6 +7,8 @@ import { getAuth } from 'firebase/auth';
 import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail } from 'firebase/auth';
 
 import { crearPostulante } from '../../helpers/getPostulante'
+import { getServicios } from '../../helpers/getServicios';
+import { seleccionarServicio } from '../../helpers/getServicioSeleccionado'
 
 export const Postulante = ({ show, handleClose }) => {
 // los estados de los datos generales del postulante 
@@ -14,7 +16,8 @@ export const Postulante = ({ show, handleClose }) => {
   const [apellido, setApellido] = useState('');
   const [pretencion_salarial, setPretension] = useState(0);
   const [comentario, setComentario] = useState('');
-  const [cv, setCv] = useState(null);
+  const [cv, setCv] = useState('');
+  const [url_cv, setUrl_cv] = useState(null);
 
 
   const handleNombreChange = (e) => {
@@ -35,7 +38,7 @@ export const Postulante = ({ show, handleClose }) => {
 
   const handleCvChange = (event) => {
     const file = event.target.files[0];
-    setCv(file);
+    setUrl_cv(file);
   }
   
 //los estados del email
@@ -55,6 +58,27 @@ export const Postulante = ({ show, handleClose }) => {
     useEffect(() => {
       setShowPassword(false); // Restablecer el estado del botón al cerrar el modal
     }, [show]);
+
+    //estado de los servicios y el useEffect para obtener los servicios
+  const [servicios, setServicios] = useState([]);
+  const [checkboxValues, setCheckboxValues] = useState([]);
+
+  useEffect(() => {
+    const obtenerServicios = async () => {
+      const data = await getServicios();
+      setServicios(data);
+    };
+    obtenerServicios();
+  }, []);
+
+  const handleCheckboxChange = (e) => {
+    const value = e.target.value;
+    if (e.target.checked) {
+      setCheckboxValues([...checkboxValues, value]);
+    } else {
+      setCheckboxValues(checkboxValues.filter((val) => val !== value));
+    }
+  };
 
    //los estados de las contrase;as
     const [password, setPassword] = useState("");
@@ -109,9 +133,9 @@ export const Postulante = ({ show, handleClose }) => {
 //constante submit donde se obtienen y se envian los datos del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(e.target.Nombre.value)
+/*     console.log(e.target.Nombre.value)
     console.log(email)
-    console.log(password)
+    console.log(password) */
     // Aquí iría el código para enviar la información del formulario al servidor
     //antes de registrar el usuario, verifico la validacion del email
     if (!isEmailValidated) {
@@ -128,29 +152,44 @@ export const Postulante = ({ show, handleClose }) => {
       //en este try se registran datos del usuario en Cloud Firestore
       const UIDusuario = userCredential.user.uid;
       // subir archivo a Firebase Storage
-      if (cv) {
-        const storageRef = ref(storage, `cv/${cv.name}`);
-        await uploadBytes(storageRef, cv);
+      if (url_cv) {
+        const storageRef = ref(storage, `cv/${url_cv.name}`);
+        await uploadBytes(storageRef, url_cv);
         console.log('archivo subido')
         getDownloadURL(storageRef)
         .then((url) => {
           console.log(`URL de descarga: ${url}`);
-          const cv = url;
-          const codigo_usuario = 2;
-          const datosPostulante = {
-            nombre,
-            apellido,
-            pretencion_salarial,
-            comentario, 
-            cv, 
-            email
-          };
-          crearPostulante(datosPostulante);
+          setCv(url);
         })
         .catch((error) => {
           console.error(`Error al obtener la URL de descarga: ${error}`);
         });
       }
+      //objeto con los datos preparados para enviarlos al postulante
+      //const cv = url_cv;
+      console.log(cv);
+      const datosPostulante = {
+        nombre,
+        apellido,
+        pretencion_salarial,
+        comentario, 
+        cv, 
+        email
+      };
+      const respuestaCrearPostulante = await crearPostulante(datosPostulante);
+
+      // Obtenemos el codigo_usuario de la respuesta
+      const codigo_usuario = respuestaCrearPostulante.codigo_usuario;
+      console.log(codigo_usuario);
+
+      //envio de los servicios seleccionados
+      const enviarSeleccionServicios = async () => {
+        checkboxValues.forEach(async (value) => {
+          const codigo_servicio = value;
+          await seleccionarServicio(codigo_usuario, codigo_servicio);
+        });
+      };
+      enviarSeleccionServicios();
 
     } catch (error) {
       setError('Hubo un error al registrar al usuario');
@@ -279,12 +318,21 @@ export const Postulante = ({ show, handleClose }) => {
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="Areas_Postularse">
-          <Form.Label>Areas a postularse</Form.Label>
-          <Form.Control as="select">
-            <option value="postulante">Postulante</option>
-            <option value="empleador">Empleador</option>
-          </Form.Control>
-        </Form.Group>
+              <Form.Label>Areas a emplear</Form.Label>
+                
+                {servicios.map((servicio) => (
+                  <Form.Check
+                    type="checkbox"
+                    key={servicio.cod_servicio}
+                    id={`check-${servicio.cod_servicio}`}
+                    label={servicio.nombre}
+                    value={servicio.cod_servicio}
+                    onChange={handleCheckboxChange}
+                  />
+                ))}
+        
+          <p>Checkbox values: {checkboxValues.join(', ')}</p>
+            </Form.Group>
         <div className="d-flex justify-content-end">
           <Button className='m-1' variant="secondary" onClick={() => {
               handleClose();
