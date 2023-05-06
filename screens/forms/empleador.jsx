@@ -1,21 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import { Modal, Form, Button } from "react-bootstrap";
-
-import { app } from '../../src/firebase/configFirebase';
-import { getAuth } from 'firebase/auth';
-import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail } from 'firebase/auth';
-
-import { crearEmpleador } from '../../helpers/getEmpleador'
-import { getServicios } from '../../helpers/getServicios';
-import { seleccionarServicio } from '../../helpers/getServicioSeleccionado'
 
 
-export const Empleador = ({ show, handleClose }) => {
-  // los estados de los datos generales del empleador 
+  
+ /*  // los estados de los datos generales del empleador 
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [tel, setTelefono] = useState('');
   const [razon_social, setRazon] = useState('');
+  const [email, setEmail] = useState('');
 
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
@@ -53,12 +44,6 @@ export const Empleador = ({ show, handleClose }) => {
     }
   };
 
-    //los estados del email
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState(null);
-  const [isEmailValidated, setIsEmailValidated] = useState(false);
-
-  const auth = getAuth(app);
 
       //modulo de contrase;as, parte 1 - boton para mostrar o escoder password
     const [showPassword, setShowPassword] = useState(false);
@@ -84,42 +69,12 @@ export const Empleador = ({ show, handleClose }) => {
     const handleConfirmPasswordChange = (e) => {
       setConfirmPassword(e.target.value);
     }; 
-
-  //validacion de email 
-  useEffect(() => {
-    if (email.trim().length === 0) {
-      setIsEmailValidated(false);
-    } else {
-      handleEmailValidation();
-    }
-  }, [email])
-
-    
+   
  //validacion de contrase;as, validar que sean iguales 
     useEffect(() => {
       const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&+#=(){}[\]<>|\\/^~`,.;:_-])[A-Za-z\d@$!%*?&+#=(){}[\]<>|\\/^~`,.;:_-]{8,}$/;
       setPasswordMatch(password === confirmPassword && password !== "" && passwordRegex.test(password));
   }, [password, confirmPassword]);
-
-//validacion del email para verificar si ya existe una cuenta en firebase con ese email
-  const handleEmailValidation = async () => {
-    try {
-      const signInMethods = await fetchSignInMethodsForEmail(auth, email);
-      if (signInMethods.length > 0) {
-        setError('Este correo electrónico ya está registrado');
-        console.log('Error de handleEmailValidation, el correo ya esta registrado');
-        setIsEmailValidated(false);
-      } else {
-        setIsEmailValidated(true);
-        setError(null);
-        console.log('todo ok con handleEmailValidation');
-      }
-    } catch (error) {
-      setError('Hubo un error al validar el correo electrónico');
-      console.log('Error de handleEmailValidation');
-      setIsEmailValidated(false);
-    }
-  };
 
 //constante submit donde se obtienen y se envian los datos del formulario
   const handleSubmit = async (e) => {
@@ -127,18 +82,8 @@ export const Empleador = ({ show, handleClose }) => {
     console.log(email)
     console.log(password)
     // Aquí iría el código para enviar la información del formulario al servidor
-    //antes de registrar el usuario, verifico la validacion del email
-    if (!isEmailValidated) {
-      setError('Por favor, valide su correo electrónico antes de continuar');
-      console.log('error al validar email');
-      return;
-    }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      setError(null);
-      console.log('Usuario registrado:', userCredential.user);
-      console.log('UID Usuario registrado:', userCredential.user.uid);
       //en este try se registran datos del empleador a la api
       const id = userCredential.user.uid;
 
@@ -232,14 +177,6 @@ export const Empleador = ({ show, handleClose }) => {
                 onChange={handleEmailChange}
                 required  
               />
-              <Form.Text>
-                {isEmailValidated === false && (
-                <span style={{ color: "red" }}>Ingrese una direccion de correo electrónico valida</span>
-                )}
-                {isEmailValidated === true && (
-                <span style={{ color: "green" }}>Correo válido</span>
-                )}
-            </Form.Text>
             </Form.Group>
             <Form.Group className="mb-3" controlId="Password">
             <Form.Label>Contraseña</Form.Label>
@@ -306,7 +243,7 @@ export const Empleador = ({ show, handleClose }) => {
             }}>
             Cerrar
           </Button>
-          <Button type="submit" className='m-1' variant="primary" disabled={!passwordMatch || !isEmailValidated} onClick={handleClose}>
+          <Button type="submit" className='m-1' variant="primary" disabled={!passwordMatch} onClick={handleClose}>
             Registrarse
           </Button>
         </div>
@@ -318,3 +255,4 @@ export const Empleador = ({ show, handleClose }) => {
     </>
   )
 }
+  */

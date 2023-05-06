@@ -1,5 +1,6 @@
 export const crearEmpleador = async (nuevoEmpleador) => {
-    const url = `https://apitopservicesgt-production.up.railway.app/api/empleadores`;
+    const url = `https://apitopservicesgt-production.up.railway.app/api/usuarios/crear-empleador`;
+    console.log(nuevoEmpleador)
     const resp = await fetch(url, {
       method: 'POST',
       headers: {

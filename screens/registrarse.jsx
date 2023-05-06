@@ -2,7 +2,9 @@ import React, { useState } from 'react'
 import { Container, Row, Col, ListGroup, Card, Button } from "react-bootstrap";
 
 import { Postulante } from './forms/postulante'
-import { Empleador } from './forms/empleador'
+//import { Empleador } from './forms/empleador'
+import { PrimerFormulario } from './forms/partes_forms_empleador/part1'
+import { SegundoFormulario } from './forms/partes_forms_empleador/part2'
 
 export const Registrarse = () => {
 
@@ -13,6 +15,11 @@ export const Registrarse = () => {
     const handlePostulanteModalClose = () => setShowPostulanteModal(false);
     const handleEmpleadorModalShow = () => setShowEmpleadorModal(true);
     const handleEmpleadorModalClose = () => setShowEmpleadorModal(false);
+
+    const [showEmpleadorModal2, setShowEmpleadorModal2] = useState(false);
+
+    const handleEmpleadorModalShow2 = () => setShowEmpleadorModal2(true);
+    const handleEmpleadorModalClose2 = () => setShowEmpleadorModal2(false);
 
   return (   
     <div className="container mb-4 mt-5 bg-light p-4 rounded-3">
@@ -39,7 +46,7 @@ export const Registrarse = () => {
         <Card.Body>
 
         <div className="d-flex justify-content-center">
-        <Button onClick={handlePostulanteModalShow}>Registrarme</Button>
+        <Button onClick={handlePostulanteModalShow}>Registrarme postulante</Button>
         <Postulante
         show={showPostulanteModal}
         handleClose={handlePostulanteModalClose}
@@ -69,11 +76,17 @@ export const Registrarse = () => {
         <Card.Body>
 
         <div className="d-flex justify-content-center">
-        <Button onClick={handleEmpleadorModalShow}>Registrarme</Button>
-        <Empleador
+        <Button onClick={handleEmpleadorModalShow}>Registrarme empleador</Button>
+
+        <PrimerFormulario show={showEmpleadorModal} handleClose={handleEmpleadorModalClose} form2={handleEmpleadorModalShow2} /> 
+
+        <SegundoFormulario show={showEmpleadorModal2} handleClose={handleEmpleadorModalClose2} /> 
+
+
+        {/* <Empleador
         show={showEmpleadorModal}
         handleClose={handleEmpleadorModalClose}
-        />
+        /> */}
         </div>
 
       </Card.Body>
