@@ -1,12 +1,21 @@
 import { useState } from 'react';
 import { Modal, Form, Button } from "react-bootstrap";
+import { TokenContext } from '../../../src/components/context/contexto';
+import { useContext } from 'react';
+import { crearDatosEmpleador } from '../../../helpers/getEmpleador'
 
 export function SegundoFormulario({ show, handleClose }) {
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
-  const [razonSocial, setRazonSocial] = useState('');
-  const [telefono, setTelefono] = useState('');
-  
+  const [razon_social, setRazonSocial] = useState('');
+  const [tel, setTelefono] = useState('');
+
+  //mi contexto para obtener el token y cod_usuario
+  const { token, cod_usuario } = useContext(TokenContext);
+  const { cod_empleador, setCod_empleador } = useContext(TokenContext);
+  console.log('hola')
+  console.log(token, cod_usuario, cod_empleador)
+
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
   };
@@ -26,7 +35,27 @@ export function SegundoFormulario({ show, handleClose }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Aquí puedes agregar la lógica para enviar los datos del segundo formulario a la API
+    enviarDatos();
   };
+
+  const enviarDatos = async () => {
+
+    const datosEmpleador = {
+      nombre,
+      apellido,
+      razon_social,
+      tel,
+      codigo_usuario: cod_usuario
+    };
+
+    const respuestaEmpleador = await crearDatosEmpleador(datosEmpleador, token);
+
+    console.log(respuestaEmpleador);
+    const datoCodEmpleador = respuestaEmpleador.codigo;
+    console.log(datoCodEmpleador);
+    setCod_empleador(datoCodEmpleador);
+    
+  }
   
   return (
     <Modal show={show} onHide={handleClose}>

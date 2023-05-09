@@ -1,13 +1,16 @@
 import { crearEmpleador } from '../../../helpers/getEmpleador';
 import { Modal, Form, Button } from "react-bootstrap";
 import { useState } from 'react';
-
+import { TokenContext } from '../../../src/components/context/contexto';
+import { useContext } from 'react';
 
 export function PrimerFormulario({show, handleClose, form2}) {
   const [correo, setCorreo] = useState('');
   const [clave, setClave] = useState('');
-  const [token, setToken] = useState('');
-  const [cod_usuario, setCod_usuario] = useState(null)
+
+  //actualizar mi contexto
+  const { setToken, setCod_usuario } = useContext(TokenContext);
+
 
   const handleEmailChange = (event) => {
     setCorreo(event.target.value);
@@ -37,19 +40,7 @@ export function PrimerFormulario({show, handleClose, form2}) {
 
     setToken(datoToken);
     setCod_usuario(datoCodUsuario);
-    console.log(token)
-    console.log(cod_usuario)
-
-
-
-
-    //if (response.status === 'success') {
-/*       setMostrarPrimerFormulario(false);
-      setMostrarSegundoFormulario(true); */
-      //console.log('envio exitoso')
-    //} else {
-     // console.log('Error al enviar los datos');
-    //}
+    
   }
 
   return (
