@@ -4,7 +4,7 @@ import { TokenContext } from '../../../src/components/context/contexto';
 import { useContext } from 'react';
 import { crearDatosEmpleador } from '../../../helpers/getEmpleador'
 
-export function SegundoFormulario({ show, handleClose }) {
+export function SegundoFormulario({ show, handleClose, form3 }) {
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [razon_social, setRazonSocial] = useState('');
@@ -12,9 +12,9 @@ export function SegundoFormulario({ show, handleClose }) {
 
   //mi contexto para obtener el token y cod_usuario
   const { token, cod_usuario } = useContext(TokenContext);
-  const { cod_empleador, setCod_empleador } = useContext(TokenContext);
+  const { codigo, setCodigo } = useContext(TokenContext);
   console.log('hola')
-  console.log(token, cod_usuario, cod_empleador)
+  console.log(token, cod_usuario, codigo)
 
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
@@ -53,7 +53,7 @@ export function SegundoFormulario({ show, handleClose }) {
     console.log(respuestaEmpleador);
     const datoCodEmpleador = respuestaEmpleador.codigo;
     console.log(datoCodEmpleador);
-    setCod_empleador(datoCodEmpleador);
+    setCodigo(datoCodEmpleador);
     
   }
   
@@ -104,8 +104,8 @@ export function SegundoFormulario({ show, handleClose }) {
           <Button variant="secondary" onClick={handleClose}>
             Cancelar
           </Button>
-          <Button variant="primary" type="submit">
-            Registrar
+          <Button variant="primary" type="submit" onClick={() => { form3(); handleClose(); }}>
+            Siguiente
           </Button>
         </Form>
       </Modal.Body>

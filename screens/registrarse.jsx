@@ -1,25 +1,53 @@
 import React, { useState } from 'react'
 import { Container, Row, Col, ListGroup, Card, Button } from "react-bootstrap";
 
-import { Postulante } from './forms/postulante'
+//import { Postulante } from './forms/postulante'
 //import { Empleador } from './forms/empleador'
 import { PrimerFormulario } from './forms/partes_forms_empleador/part1'
 import { SegundoFormulario } from './forms/partes_forms_empleador/part2'
+import { TercerFormulario } from './forms/partes_forms_empleador/part3'
+
+import { PrimerFormularioP } from './forms/partes_forms_postulante/part1'
+import { SegundoFormularioP } from './forms/partes_forms_postulante/part2'
+import { TercerFormularioP } from './forms/partes_forms_postulante/part3'
 
 export const Registrarse = () => {
 
-    const [showPostulanteModal, setShowPostulanteModal] = useState(false);
+  //abrir el primer formulario modal del empleador
     const [showEmpleadorModal, setShowEmpleadorModal] = useState(false);
   
-    const handlePostulanteModalShow = () => setShowPostulanteModal(true);
-    const handlePostulanteModalClose = () => setShowPostulanteModal(false);
     const handleEmpleadorModalShow = () => setShowEmpleadorModal(true);
     const handleEmpleadorModalClose = () => setShowEmpleadorModal(false);
-
+//abrir el segundo formulario modal del empleador
     const [showEmpleadorModal2, setShowEmpleadorModal2] = useState(false);
 
     const handleEmpleadorModalShow2 = () => setShowEmpleadorModal2(true);
     const handleEmpleadorModalClose2 = () => setShowEmpleadorModal2(false);
+
+//para abrir el tercer formulario modal del empleador
+    const [showEmpleadorModal3, setShowEmpleadorModal3] = useState(false);
+
+    const handleEmpleadorModalShow3 = () => setShowEmpleadorModal3(true);
+    const handleEmpleadorModalClose3 = () => setShowEmpleadorModal3(false);
+
+    //para abrir el primer formulario modal del postulante
+    const [showPostulanteModal, setShowPostulanteModal] = useState(false);
+
+    const handlePostulanteModalShow = () => setShowPostulanteModal(true);
+    const handlePostulanteModalClose = () => setShowPostulanteModal(false);
+
+    //para abrir el segundo formulario modal del postulante
+    const [showPostulanteModal2, setShowPostulanteModal2] = useState(false);
+
+    const handlePostulanteModalShow2 = () => setShowPostulanteModal2(true);
+    const handlePostulanteModalClose2 = () => setShowPostulanteModal2(false);
+
+    //para abrir el segundo formulario modal del postulante
+    const [showPostulanteModal3, setShowPostulanteModal3] = useState(false);
+
+    const handlePostulanteModalShow3 = () => setShowPostulanteModal3(true);
+    const handlePostulanteModalClose3 = () => setShowPostulanteModal3(false);
+
 
   return (   
     <div className="container mb-4 mt-5 bg-light p-4 rounded-3">
@@ -47,11 +75,13 @@ export const Registrarse = () => {
 
         <div className="d-flex justify-content-center">
         <Button onClick={handlePostulanteModalShow}>Registrarme postulante</Button>
-        <Postulante
-        show={showPostulanteModal}
-        handleClose={handlePostulanteModalClose}
-        />
+
+        <PrimerFormularioP show={showPostulanteModal} handleClose={handlePostulanteModalClose} form2={handlePostulanteModalShow2} />
         </div>
+
+        <SegundoFormularioP show={showPostulanteModal2} handleClose={handlePostulanteModalClose2} form3={handlePostulanteModalShow3} />
+
+        <TercerFormularioP show={showPostulanteModal3} handleClose={handlePostulanteModalClose3} />
 
       </Card.Body>
     </Card>
@@ -80,7 +110,9 @@ export const Registrarse = () => {
 
         <PrimerFormulario show={showEmpleadorModal} handleClose={handleEmpleadorModalClose} form2={handleEmpleadorModalShow2} /> 
 
-        <SegundoFormulario show={showEmpleadorModal2} handleClose={handleEmpleadorModalClose2} /> 
+        <SegundoFormulario show={showEmpleadorModal2} handleClose={handleEmpleadorModalClose2} form3={handleEmpleadorModalShow3} /> 
+
+        <TercerFormulario show={showEmpleadorModal3} handleClose={handleEmpleadorModalClose3} />
 
 
         {/* <Empleador

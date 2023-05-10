@@ -14,11 +14,11 @@ import { TokenContext } from './components/context/contexto';
 function App() {
   const [token, setToken] = useState('');
   const [cod_usuario, setCod_usuario] = useState(null);
-  const [cod_empleador, setCod_empleador] = useState(null);
+  const [codigo, setCodigo] = useState(null);
 
   return (
     <>
-    <TokenContext.Provider value={{ token, cod_usuario, cod_empleador, setToken, setCod_usuario, setCod_empleador }}>
+    <TokenContext.Provider value={{ token, cod_usuario, codigo, setToken, setCod_usuario, setCodigo }}>
     <Routes>
       <Route path='/' element={<Encabezado/>}>
       <Route path='/' element={<Cuerpo/>}/>
