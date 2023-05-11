@@ -11,6 +11,11 @@ import { List_check } from '../screens/forms/list_Servicios/list_check'
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { TokenContext } from './components/context/contexto';
 
+//import para las rutas de los roles
+import { HomeAdmin } from './components/viewsAdmin/homeAdmin'
+import { HomeEmpleador } from './components/viewsEmpleador/homeEmpleador'
+import { HomePostulante } from './components/viewsPostulante/homePostulante'
+
 function App() {
   const [token, setToken] = useState('');
   const [cod_usuario, setCod_usuario] = useState(null);
@@ -26,6 +31,9 @@ function App() {
       <Route path='/login' element={<Login/>}/>
       <Route path='/registrarse' element={<Registrarse/>}/>
       <Route path='/prueba' element={<List_check/>}/>
+      <Route path='/admin' element={<HomeAdmin/>}/>
+      <Route path='/empleador' element={<HomeEmpleador/>}/>
+      <Route path='/postulante' element={<HomePostulante/>}/>
         
       </Route>
     </Routes>
