@@ -20,7 +20,7 @@ export const Login = () => {
   };
 
   //actualizar mi contexto
-  const { setToken, token } = useContext(TokenContext);
+  const { setToken, setCod_usuario } = useContext(TokenContext);
 
   //hook navigate
   const navigate = useNavigate();
@@ -38,10 +38,12 @@ export const Login = () => {
 
     const decodedToken = jwt_decode(datoToken);
     const codigo_rol = decodedToken.codigo_rol;
-    
-    console.log(codigo_rol);
+    const codigo = decodedToken.code;
+
+    console.log(decodedToken)
 
     setToken(datoToken);
+    setCod_usuario(codigo);
 
     let redirect = '/';
     switch (codigo_rol) {
@@ -66,7 +68,7 @@ export const Login = () => {
   function handleSubmit(e) {
     e.preventDefault();
     // Aquí puedes realizar las validaciones y enviar los datos del formulario
-    console.log('hola',token)
+    
     enviarDatos();
   }
 
