@@ -40,7 +40,7 @@ export const Login = () => {
     const codigo_rol = decodedToken.codigo_rol;
     const codigo = decodedToken.code;
 
-    console.log(decodedToken)
+    //console.log(decodedToken)
 
     setToken(datoToken);
     setCod_usuario(codigo);

@@ -75,6 +75,8 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
       codigo_usuario: cod_usuario
     };
 
+    console.log('probando mi cv',cv)
+
     const respuestaPostulante = await crearPostulante(datosPostulante, token);
 
     console.log(respuestaPostulante);
@@ -126,7 +128,7 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
             <Form.Group className="mb-3" controlId="CV">
               <Form.Label>Carga tu CV</Form.Label>
               <Form.Control
-                type="file"
+                type="file" 
                 onChange={handleCvChange}
               />
             </Form.Group>

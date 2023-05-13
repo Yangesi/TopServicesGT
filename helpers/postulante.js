@@ -1,6 +1,6 @@
 
 export const getPostulantes = async (token) => {
-  const url = `https://apitopservicesgt-production.up.railway.app/api/postulante`;
+  const url = `https://apitopservicesgt-production.up.railway.app/api/postulantes`;
   const resp = await fetch(url, {
     method: 'GET',
     headers: {
@@ -13,7 +13,7 @@ export const getPostulantes = async (token) => {
 };
 
 export const getPostulantePorCodigo = async (codigo_postulante, token) => {
-  const url = `https://apitopservicesgt-production.up.railway.app/api/postulante/${codigo_postulante}`;
+  const url = `https://apitopservicesgt-production.up.railway.app/api/postulantes/${codigo_postulante}`;
   const resp = await fetch(url, {
     method: 'GET',
     headers: {
