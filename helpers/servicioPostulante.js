@@ -54,3 +54,32 @@ export const actualizarServicioPostulante = async (codigo, datosServicio, token)
   return jsonData;
 };
 
+
+
+
+export const getServiciosPostulantesPorCodigoServicio = async (token) => {
+  const url = `https://apitopservicesgt-production.up.railway.app/api/servicio-postulante/`;
+  const resp = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'authorization': `Bearer ${token}`
+    }
+  });
+  const jsonData = await resp.json();
+  return jsonData;
+};
+
+/* // Implementación de la ruta en Express
+// Ruta: /api/servicio-postulante/
+router.get('/servicio/:codigo_servicio', verificarToken(rol.admin), async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(' ')[1];
+    const resultado = await getServiciosPostulantes(token);
+    res.json(resultado);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal server error');
+  }
+}); */
+

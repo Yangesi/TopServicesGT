@@ -11,6 +11,7 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
 
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
+  const [tel, setTelefono] = useState('');
   const [pretencion_salarial, setPretension] = useState(0);
   const [comentario, setComentario] = useState('');
   const [cv, setCv] = useState('');
@@ -28,6 +29,10 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
   
   const handleApellidoChange = (e) => {
     setApellido(e.target.value);
+  };
+
+  const handleTelefonoChange = (e) => {
+    setTelefono(e.target.value);
   };
  
   const handlePretensionChange = (e) => {
@@ -50,45 +55,45 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
   };
 
   const enviarDatos = async () => {
-
     try {
-    if (url_cv) {
+      if (url_cv) {
         const storageRef = ref(storage, `cv/${url_cv.name}`);
         await uploadBytes(storageRef, url_cv);
-        console.log('archivo subido')
-        getDownloadURL(storageRef)
-        .then((url) => {
+        console.log('archivo subido');
+  
+        try {
+          const url = await getDownloadURL(storageRef);
           console.log(`URL de descarga: ${url}`);
           setCv(url);
-        })
-        .catch((error) => {
+        } catch (error) {
           console.error(`Error al obtener la URL de descarga: ${error}`);
-        });
+        }
       }
-
-    const datosPostulante = {
-      nombre,
-      apellido,
-      pretencion_salarial,
-      comentario,
-      cv,
-      codigo_usuario: cod_usuario
-    };
-
-    console.log('probando mi cv',cv)
-
-    const respuestaPostulante = await crearPostulante(datosPostulante, token);
-
-    console.log(respuestaPostulante);
-    const datoCodPostulante = respuestaPostulante.codigo;
-    console.log(datoCodPostulante);
-    setCodigo(datoCodPostulante);
-    }catch(error){
-        setError('Hubo un error al registrar al usuario');
-        console.log('Error al registrar el usuario')
+  
+      const datosPostulante = {
+        nombre,
+        apellido,
+        pretencion_salarial,
+        comentario,
+        cv,
+        codigo_usuario: cod_usuario,
+        tel
+      };
+  
+      console.log('probando mi cv', datosPostulante);
+  
+      const respuestaPostulante = await crearPostulante(datosPostulante, token);
+  
+      console.log(respuestaPostulante);
+      const datoCodPostulante = respuestaPostulante.codigo;
+      console.log(datoCodPostulante);
+      setCodigo(datoCodPostulante);
+    } catch (error) {
+      setError('Hubo un error al registrar al usuario');
+      console.log('Error al registrar el usuario');
     }
-    
-  }
+  };
+  
   
   return (
     <Modal show={show} onHide={handleClose}>
@@ -113,6 +118,15 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
               type="text"
               placeholder="Ingresa tu apellido"
               onChange={handleApellidoChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="Telefono">
+            <Form.Label>Teléfono</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Ingresa tu teléfono"
+              onChange={handleTelefonoChange}
               required
             />
           </Form.Group>
