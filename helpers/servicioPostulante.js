@@ -54,11 +54,8 @@ export const actualizarServicioPostulante = async (codigo, datosServicio, token)
   return jsonData;
 };
 
-
-
-
-export const getServiciosPostulantesPorCodigoServicio = async (token) => {
-  const url = `https://apitopservicesgt-production.up.railway.app/api/servicio-postulante/`;
+export const getServiciosPostulantesPorCodigoServicio = async (codigo_servicio, token) => {
+  const url = `https://apitopservicesgt-production.up.railway.app/api/servicio-postulante/servicio/${codigo_servicio}`;
   const resp = await fetch(url, {
     method: 'GET',
     headers: {

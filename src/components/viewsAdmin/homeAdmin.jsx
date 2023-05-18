@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { obtenerListaEmpleadores } from '../../../helpers/getEmpleador'
 import { getPostulantes } from '../../../helpers/postulante'
 //import { getServiciosEmpleadorPorCodigoServicio } from '../../../helpers/servicioEmpleador'
-import { getServiciosPostulantesPorCodigoServicio } from '../../../helpers/servicioPostulante'
 import { TokenContext } from '../../../src/components/context/contexto';
 import { useContext } from 'react';
 
@@ -17,7 +16,6 @@ export const HomeAdmin = () => {
   const [listaEmpleadores, setListaEmpleadores] = useState([]);
   const [listaPostulantes, setListaPostulantes] = useState([]);
   const [listaEmpleadoresPorCodigoS, setListaEmpleadoresPorCodigoS] = useState([]);
-  const [serviciosPostulantes, setserviciosPostulantes] = useState([])
   
   const { token } = useContext(TokenContext);
 
@@ -44,13 +42,6 @@ export const HomeAdmin = () => {
         //setListaEmpleadoresPorCodigoS(data);
       };
       obtenerEmpleadoresPorCodigoS();
-
-      //obtener lista de servicios de los postulantes
-      const obtenerServiciosPostulantes = async () => {
-        const data = await getServiciosPostulantesPorCodigoServicio(token);
-        setserviciosPostulantes(data);
-      };
-      obtenerServiciosPostulantes();
 
       console.log('existe')
     } else {

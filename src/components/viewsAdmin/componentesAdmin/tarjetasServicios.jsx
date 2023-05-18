@@ -8,22 +8,34 @@ import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
 
 
-import { getServiciosEmpleadorNoRealizado } from '../../../../helpers/servicioEmpleador'
+import { getServiciosEmpleadorNoRealizado, actualizarServicioEmpleador } from '../../../../helpers/servicioEmpleador'
+import { getServiciosPostulantesPorCodigoServicio } from '../../../../helpers/servicioPostulante'
 
 //contexto
 import { TokenContext } from '../../../../src/components/context/contexto';
 import { useContext } from 'react';
 
 export const TarjetasServicios = () => {
+
+  //lista de servicios
   const [servicios, setServicios] = useState([]);
 
+  //lista de empleadores y postulantes filtrados por servicios
   const [serviciosEmpleadorNo, setServiciosEmpleadorNo] = useState([]);
+  const [serviciosPostulante, setServiciosPostulante] = useState([])
 
+  //contexto
   const { token } = useContext(TokenContext);
 
+  //select seleccionados
   const [tipoSeleccionado, setTipoSeleccionado] = useState('');
   const [serviciosFiltrados, setServiciosFiltrados] = useState([]);
   const [codigoServicioSeleccionado, setCodigoServicioSeleccionado] = useState(0);
+
+//radio button seleccionados
+  const [seleccionEmpleador, setSeleccionEmpleador] = useState(0);
+  const [seleccionPostulante, setSeleccionPostulante] = useState(0);
+
 
   useEffect(() => {
     const obtenerServicios = async () => {
@@ -52,19 +64,54 @@ export const TarjetasServicios = () => {
       };
       obtenerServiciosEmpleadorNoRealizados();
   
-  }, [codigoServicioSeleccionado]) 
+  }, [codigoServicioSeleccionado])
+  
+  useEffect(() => {
+
+    const obtenerPostulantesPorCodigoServicio = async () => {
+      const data = await getServiciosPostulantesPorCodigoServicio(codigoServicioSeleccionado, token);
+      setServiciosPostulante(data);
+    };
+    obtenerPostulantesPorCodigoServicio();    
+
+  }, [codigoServicioSeleccionado])
+  
 
   const handleServicioChange = (e) => {
     setCodigoServicioSeleccionado(e.target.value);
   };
+//pendiente de revisar, un useeffect no se puede usar dentro de un if
+  const handleAsignarClick = () => {
+    if (seleccionEmpleador && seleccionPostulante) {
+      const servicioEmpleador = {
+        realizado: new Date().toISOString(),
+        fecha_realizado: true,
+        codigo_postulante: seleccionPostulante
+      }; 
+
+      useEffect(() => {
+        const enviarServicioEmpleador = async () => {
+          const data = await actualizarServicioEmpleador(seleccionEmpleador,servicioEmpleador,token);
+          //setServicios(data);
+          console.log(data)
+        };
+        enviarServicioEmpleador();
+      }, []);
+
+    } else {
+      console.log('error al selecionar los radio button')
+    }
+  };
+  
   
 
-  //console.log(servicioSeleccionado1)
-  //console.log(servicioSeleccionado2)
- console.log("cod_servicio",codigoServicioSeleccionado)
- console.log(token)
+  //console.log("PostulantePorCodigo",serviciosPostulante)
+  console.log('id',seleccionEmpleador)
+  console.log('codigo',seleccionPostulante)
+//console.log("cod_servicio",codigoServicioSeleccionado)
+ //console.log(token)
   //console.log("cod_servicio",servicioSeleccionado2)
-  console.log("servicio empleador no",serviciosEmpleadorNo)
+ // console.log("servicio empleador no",serviciosEmpleadorNo)
 
   return (
     <>
@@ -96,27 +143,58 @@ export const TarjetasServicios = () => {
           ))}
         </Form.Select>
       )}
-
+    <Card.Subtitle>Empleadores</Card.Subtitle>
     <ListGroup as="ol" numbered>
-      {serviciosEmpleadorNo.map((servicio, index) => (
-        <ListGroup.Item
-          key={index}
-          as="li"
-          className="d-flex justify-content-between align-items-start"
-        >
-          <div className="ms-2 me-auto">
-            <div className="fw-bold">
-              {servicio.nombre} {servicio.apellido}
-            </div>
-            Tel: {servicio.tel}
-          </div>
-
-        </ListGroup.Item>
-      ))}
-    </ListGroup> 
-
+  {serviciosEmpleadorNo.map((servicio, index) => (
+    <ListGroup.Item
+      key={index}
+      as="li"
+      className="d-flex justify-content-between align-items-start"
+    >
+      <div className="ms-2 me-auto">
+        <div className="fw-bold">
+          {servicio.nombre} {servicio.apellido}
+        </div>
+        Tel: {servicio.tel}
+      </div>
+      <Form.Check
+        type="radio"
+        name="empleador"
+        value={servicio.id}
+        onChange={(e) => setSeleccionEmpleador(e.target.value)}
+      />
+    </ListGroup.Item>
+  ))}
+</ListGroup>
+<Card.Subtitle>Postulantes</Card.Subtitle>
+<ListGroup as="ol" numbered>
+  {serviciosPostulante.map((servicio, index) => (
+    <ListGroup.Item
+      key={index}
+      as="li"
+      className="d-flex justify-content-between align-items-start"
+    >
+      <div className="ms-2 me-auto">
+        <div className="fw-bold">
+          {servicio.nombre} {servicio.apellido}
+        </div>
+        <div>Pretension salarial: {servicio.pretencion_salarial}</div>
+      </div>
+      <Form.Check
+        type="radio"
+        name="postulante"
+        value={servicio.codigo}
+        onChange={(e) => setSeleccionPostulante(e.target.value)}
+      />
+    </ListGroup.Item>
+  ))}
+</ListGroup>
+ 
           </Card.Text>
-          <Button variant="primary">Go somewhere</Button>
+          <Button variant="primary" onClick={handleAsignarClick}>
+            Asignar
+          </Button>
+
         </Card.Body>
       </Card>
     </>
