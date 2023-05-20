@@ -57,7 +57,7 @@ export const actualizarServicioEmpleador = async (codigo, datosServicio, token) 
 
 
 export const getServiciosEmpleadorPorCodigoServicio = async (codigo_servicio, token) => {
-  const url = `https://apitopservicesgt-production.up.railway.app/api/servicio-empleador/${codigo_servicio}`;
+  const url = `https://apitopservicesgt-production.up.railway.app/api/servicio-empleador/servicio/${codigo_servicio}`;
   const resp = await fetch(url, {
     method: 'GET',
     headers: {

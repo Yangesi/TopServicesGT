@@ -8,8 +8,8 @@ import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
 
 
-import { getServiciosEmpleadorNoRealizado, actualizarServicioEmpleador } from '../../../../helpers/servicioEmpleador'
-import { getServiciosPostulantesPorCodigoServicio } from '../../../../helpers/servicioPostulante'
+import { getServiciosEmpleadorNoRealizado, actualizarServicioEmpleador, getServiciosEmpleadorPorCodigoServicio } from '../../../../helpers/servicioEmpleador'
+import { getServiciosPostulantesPorCodigoServicio, actualizarServicioPostulante } from '../../../../helpers/servicioPostulante'
 
 //contexto
 import { TokenContext } from '../../../../src/components/context/contexto';
@@ -22,6 +22,7 @@ export const TarjetasServicios = () => {
 
   //lista de empleadores y postulantes filtrados por servicios
   const [serviciosEmpleadorNo, setServiciosEmpleadorNo] = useState([]);
+  const [serviciosEmpleadorSi, setServiciosEmpleadorSi] = useState([]);
   const [serviciosPostulante, setServiciosPostulante] = useState([])
 
   //contexto
@@ -65,6 +66,15 @@ export const TarjetasServicios = () => {
       obtenerServiciosEmpleadorNoRealizados();
   
   }, [codigoServicioSeleccionado])
+
+  useEffect(() => {
+    const obtenerServiciosEmpleadorRealizado = async () => {
+        const data = await getServiciosEmpleadorPorCodigoServicio(codigoServicioSeleccionado, token);
+        setServiciosEmpleadorSi(data);
+      };
+      obtenerServiciosEmpleadorRealizado();
+      console.log('si',serviciosEmpleadorSi)
+  }, [codigoServicioSeleccionado])
   
   useEffect(() => {
 
@@ -81,22 +91,26 @@ export const TarjetasServicios = () => {
     setCodigoServicioSeleccionado(e.target.value);
   };
 //pendiente de revisar, un useeffect no se puede usar dentro de un if
-  const handleAsignarClick = () => {
+  const handleAsignarClick = async () => {
     if (seleccionEmpleador && seleccionPostulante) {
+      const fechaActual = new Date().toISOString().slice(0, 19).replace('T', ' ');
       const servicioEmpleador = {
-        realizado: new Date().toISOString(),
-        fecha_realizado: true,
+        realizado: 1,
+        fecha_realizado: fechaActual,
         codigo_postulante: seleccionPostulante
-      }; 
+      };
 
-      useEffect(() => {
-        const enviarServicioEmpleador = async () => {
-          const data = await actualizarServicioEmpleador(seleccionEmpleador,servicioEmpleador,token);
-          //setServicios(data);
-          console.log(data)
-        };
-        enviarServicioEmpleador();
-      }, []);
+      const data = await actualizarServicioEmpleador(seleccionEmpleador, servicioEmpleador, token);
+
+      const servicioPostulante = {
+        realizado: 1, 
+        fecha_realizado: fechaActual
+      }
+
+      //pendiente de revisar
+      //const data2 = await actualizarServicioPostulante(seleccionPostulante, servicioPostulante, token);
+      
+      //console.log('servicioPostulante',data2);
 
     } else {
       console.log('error al selecionar los radio button')
@@ -106,8 +120,8 @@ export const TarjetasServicios = () => {
   
 
   //console.log("PostulantePorCodigo",serviciosPostulante)
-  console.log('id',seleccionEmpleador)
-  console.log('codigo',seleccionPostulante)
+  //console.log('id',seleccionEmpleador)
+  //console.log('codigo',seleccionPostulante)
 //console.log("cod_servicio",codigoServicioSeleccionado)
  //console.log(token)
   //console.log("cod_servicio",servicioSeleccionado2)
@@ -119,7 +133,7 @@ export const TarjetasServicios = () => {
       <Card style={{ width: '18rem' }}>
         <Card.Img variant="top" src="holder.js/100px180" />
         <Card.Body>
-          <Card.Title>Card Title</Card.Title>
+          <Card.Title>Empleadores filtrados</Card.Title>
           <Card.Text>
             
             {/* Primer select */}
@@ -143,7 +157,7 @@ export const TarjetasServicios = () => {
           ))}
         </Form.Select>
       )}
-    <Card.Subtitle>Empleadores</Card.Subtitle>
+    <Card.Subtitle>Empleadores en false</Card.Subtitle>
     <ListGroup as="ol" numbered>
   {serviciosEmpleadorNo.map((servicio, index) => (
     <ListGroup.Item
@@ -179,6 +193,36 @@ export const TarjetasServicios = () => {
           {servicio.nombre} {servicio.apellido}
         </div>
         <div>Pretension salarial: {servicio.pretencion_salarial}</div>
+      </div>
+      <Form.Check
+        type="radio"
+        name="postulante"
+        value={servicio.codigo}
+        onChange={(e) => setSeleccionPostulante(e.target.value)}
+      />
+    </ListGroup.Item>
+  ))}
+</ListGroup>
+
+<Card.Subtitle>Empleadores en true</Card.Subtitle>
+<ListGroup as="ol" numbered>
+  {serviciosEmpleadorSi.map((servicio, index) => (
+    <ListGroup.Item
+      key={index}
+      as="li"
+      className="d-flex justify-content-between align-items-start"
+    >
+      <div className="ms-2 me-auto">
+        <div className="fw-bold">
+          {servicio.nombre} {servicio.apellido}
+        </div>
+        <div>Pretension salarial: {servicio.pretencion_salarial}</div>
+        <div>{servicio.comentario}</div>
+        <div className="fw-bold">
+          {servicio.nombre} {servicio.apellido}
+        </div>
+        <div>{servicio.tel}</div>
+        <div>{servicio.fecha_realizado}</div>
       </div>
       <Form.Check
         type="radio"
