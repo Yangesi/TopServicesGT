@@ -11,6 +11,9 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import { getServiciosEmpleadorNoRealizado, actualizarServicioEmpleador, getServiciosEmpleadorPorCodigoServicio } from '../../../../helpers/servicioEmpleador'
 import { getServiciosPostulantesPorCodigoServicio, actualizarServicioPostulante } from '../../../../helpers/servicioPostulante'
 
+//prueba
+import { ListaEmpleadores } from './listaEmpleadores'
+
 //contexto
 import { TokenContext } from '../../../../src/components/context/contexto';
 import { useContext } from 'react';
@@ -241,6 +244,8 @@ export const TarjetasServicios = () => {
 
         </Card.Body>
       </Card>
+
+      <ListaEmpleadores></ListaEmpleadores>
     </>
   );
 };

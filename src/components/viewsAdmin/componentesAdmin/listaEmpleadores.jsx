@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { getServicios } from '../../../../helpers/getServicios';
 import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
+import { crearServicio } from '../../../../helpers/servicio'
 
-export const TarjetasServicios1 = () => {
+//contexto
+import { TokenContext } from '../../../../src/components/context/contexto';
+import { useContext } from 'react';
+
+export const ListaEmpleadores = () => {
   const [servicios, setServicios] = useState([]);
-  const [tipoSeleccionado, setTipoSeleccionado] = useState('');
-  const [serviciosFiltrados, setServiciosFiltrados] = useState([]);
 
   useEffect(() => {
     const obtenerServicios = async () => {
@@ -17,53 +19,61 @@ export const TarjetasServicios1 = () => {
     obtenerServicios();
   }, []);
 
-  useEffect(() => {
-    if (tipoSeleccionado === '1') {
-      const serviciosFiltradosTipo1 = servicios.filter(servicio => servicio.cod_tipo === 1);
-      setServiciosFiltrados(serviciosFiltradosTipo1);
-    } else if (tipoSeleccionado === '2') {
-      const serviciosFiltradosTipo2 = servicios.filter(servicio => servicio.cod_tipo === 2);
-      setServiciosFiltrados(serviciosFiltradosTipo2);
-    } else {
-      setServiciosFiltrados([]);
-    }
-  }, [tipoSeleccionado, servicios]);
+  const [selectedOption, setSelectedOption] = useState(0);
+  const [textInput, setTextInput] = useState('');
+
+  //contexto
+  const { token } = useContext(TokenContext);
+
+  const handleSelectChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
+
+  const handleTextChange = (event) => {
+    setTextInput(event.target.value);
+  };
+
+  const enviarDatos = async () => {
+      const servicioNuevo = {
+        codigo_tipo_servicio: selectedOption,
+        nombre: textInput
+      }
+
+      const data = await crearServicio(servicioNuevo, token)
+      console.log(data)
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Realiza alguna acción con los datos del formulario
+    enviarDatos();
+    // Restablece los valores del formulario
+    setSelectedOption(0);
+    setTextInput('');
+  };
 
   return (
     <>
-      {/* Primer select */}
-      <Form.Select
-        value={tipoSeleccionado}
-        onChange={e => setTipoSeleccionado(e.target.value)}
-      >
-        <option value="">Seleccionar tipo de servicio</option>
-        <option value="1">Tipo 1</option>
-        <option value="2">Tipo 2</option>
-      </Form.Select>
+      <Form onSubmit={handleSubmit}>
+      <Form.Group controlId="selectOption">
+        <Form.Label>Opción:</Form.Label>
+        <Form.Control as="select" value={selectedOption} onChange={handleSelectChange}>
+          <option value="">Seleccionar tipo de servicio</option>
+          <option value="1">Tipo 1</option>
+          <option value="2">Tipo 2</option>
+        </Form.Control>
+      </Form.Group>
 
-      {/* Segundo select */}
-      {tipoSeleccionado && (
-        <Form.Select>
-          <option value="">Seleccionar servicio</option>
-          {serviciosFiltrados.map(servicio => (
-            <option key={servicio.id} value={servicio.cod_servicio}>
-              {servicio.nombre}
-            </option>
-          ))}
-        </Form.Select>
-      )}
+      <Form.Group controlId="textInput">
+        <Form.Label>Nombre del servicio:</Form.Label>
+        <Form.Control type="text" value={textInput} onChange={handleTextChange} />
+      </Form.Group>
 
-      {/* Tarjeta */}
-      <Card style={{ width: '18rem' }}>
-        <Card.Img variant="top" src="holder.js/100px180" />
-        <Card.Body>
-          <Card.Title>Card Title</Card.Title>
-          <Card.Text>
-            {/* Aquí se puede agregar el contenido de la tarjeta */}
-          </Card.Text>
-          <Button variant="primary">Go somewhere</Button>
-        </Card.Body>
-      </Card>
+      <Button variant="primary" type="submit">
+        Enviar
+      </Button>
+    </Form>
+ 
     </>
   );
 };
