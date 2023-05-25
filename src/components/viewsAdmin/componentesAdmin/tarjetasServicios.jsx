@@ -11,9 +11,6 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import { getServiciosEmpleadorNoRealizado, actualizarServicioEmpleador, getServiciosEmpleadorPorCodigoServicio } from '../../../../helpers/servicioEmpleador'
 import { getServiciosPostulantesPorCodigoServicio, actualizarServicioPostulante } from '../../../../helpers/servicioPostulante'
 
-//prueba
-import { ListaEmpleadores } from './listaEmpleadores'
-
 //contexto
 import { TokenContext } from '../../../../src/components/context/contexto';
 import { useContext } from 'react';
@@ -100,7 +97,7 @@ export const TarjetasServicios = () => {
       const servicioEmpleador = {
         realizado: 1,
         fecha_realizado: fechaActual,
-        codigo_postulante: seleccionPostulante
+        id_servicio_postulante: seleccionPostulante
       };
 
       const data = await actualizarServicioEmpleador(seleccionEmpleador, servicioEmpleador, token);
@@ -110,8 +107,9 @@ export const TarjetasServicios = () => {
         fecha_realizado: fechaActual
       }
 
+      
       //pendiente de revisar
-      //const data2 = await actualizarServicioPostulante(seleccionPostulante, servicioPostulante, token);
+      const data2 = await actualizarServicioPostulante(seleccionPostulante, servicioPostulante, token);
       
       //console.log('servicioPostulante',data2);
 
@@ -120,15 +118,14 @@ export const TarjetasServicios = () => {
     }
   };
   
-  
-
   //console.log("PostulantePorCodigo",serviciosPostulante)
   //console.log('id',seleccionEmpleador)
   //console.log('codigo',seleccionPostulante)
-//console.log("cod_servicio",codigoServicioSeleccionado)
- //console.log(token)
+  //console.log("cod_servicio",codigoServicioSeleccionado)
+  //console.log(token)
   //console.log("cod_servicio",servicioSeleccionado2)
- // console.log("servicio empleador no",serviciosEmpleadorNo)
+  // console.log("servicio empleador no",serviciosEmpleadorNo)
+  //console.log("Empleador true", serviciosEmpleadorSi)
 
   return (
     <>
@@ -200,7 +197,7 @@ export const TarjetasServicios = () => {
       <Form.Check
         type="radio"
         name="postulante"
-        value={servicio.codigo}
+        value={servicio.id}
         onChange={(e) => setSeleccionPostulante(e.target.value)}
       />
     </ListGroup.Item>
@@ -217,22 +214,24 @@ export const TarjetasServicios = () => {
     >
       <div className="ms-2 me-auto">
         <div className="fw-bold">
-          {servicio.nombre} {servicio.apellido}
+          {servicio.nom_empleador} {servicio.ap_empleador}
         </div>
-        <div>Pretension salarial: {servicio.pretencion_salarial}</div>
-        <div>{servicio.comentario}</div>
+        <div>{servicio.razon_social}</div>
+        <div>{servicio.tel_empleador}</div>
         <div className="fw-bold">
           {servicio.nombre} {servicio.apellido}
         </div>
         <div>{servicio.tel}</div>
-        <div>{servicio.fecha_realizado}</div>
+        {(() => {
+          const fecha = new Date(servicio.fecha_realizado);
+          const fechaLegible =
+            fecha.toLocaleDateString('es-ES') +
+            ' ' +
+            fecha.toLocaleTimeString('es-ES');
+          return <div>{fechaLegible}</div>;
+        })()}
       </div>
-      <Form.Check
-        type="radio"
-        name="postulante"
-        value={servicio.codigo}
-        onChange={(e) => setSeleccionPostulante(e.target.value)}
-      />
+      
     </ListGroup.Item>
   ))}
 </ListGroup>
@@ -244,8 +243,6 @@ export const TarjetasServicios = () => {
 
         </Card.Body>
       </Card>
-
-      <ListaEmpleadores></ListaEmpleadores>
     </>
   );
 };

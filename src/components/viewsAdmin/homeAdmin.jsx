@@ -7,6 +7,7 @@ import { useContext } from 'react';
 
 //llamada de componentes
 import { TarjetasServicios } from './componentesAdmin/tarjetasServicios'
+import { EditarServicio } from './componentesAdmin/editarServicio'
 
 
 
@@ -62,6 +63,7 @@ export const HomeAdmin = () => {
     <>
       <div>Hola Admin</div>
       <TarjetasServicios></TarjetasServicios>
+      <EditarServicio></EditarServicio>
     </> 
   )
 }

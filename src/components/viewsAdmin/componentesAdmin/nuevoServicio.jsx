@@ -5,10 +5,10 @@ import Form from 'react-bootstrap/Form';
 import { crearServicio } from '../../../../helpers/servicio'
 
 //contexto
-import { TokenContext } from '../../../../src/components/context/contexto';
+import { TokenContext } from '../../context/contexto';
 import { useContext } from 'react';
 
-export const ListaEmpleadores = () => {
+export const NuevoServicio = () => {
   const [servicios, setServicios] = useState([]);
 
   useEffect(() => {
