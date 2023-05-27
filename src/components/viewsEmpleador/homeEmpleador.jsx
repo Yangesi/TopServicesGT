@@ -9,8 +9,14 @@ import { useContext } from 'react';
 //react bootstrap
 import { ListGroup, Button } from 'react-bootstrap';
 
+//navigate
+import { useNavigate } from "react-router-dom";
+
 
 export const HomeEmpleador = () => {
+
+  //hook navigate
+  const navigate = useNavigate();
 
   const [datosEmpleador, setDatosEmpleador] = useState({
     apellido: '',
@@ -20,7 +26,7 @@ export const HomeEmpleador = () => {
   });
 
   const [datosServicios, setDatosServicios] = useState([]);
-  const { token, cod_usuario, setCodigo, codigo } = useContext(TokenContext);
+  const { token, setToken, cod_usuario, setCodigo, codigo } = useContext(TokenContext);
 
   useEffect(() => {
     if (token) {
@@ -33,8 +39,18 @@ export const HomeEmpleador = () => {
     } else {
       // Redireccionar a la página de inicio de sesión
       console.log('No existe el token');
+      // Redirigir a la página de inicio de sesión
+      let redirect = '/login';
+      navigate(redirect);
     }
   }, [token]);
+
+  //function para cerrar sesion
+  const handleCerrarSesion = () => {
+    // Eliminar el token estableciéndolo como una cadena vacía o null
+    setToken('');
+  
+  };
   
   useEffect(() => {
     if (datosEmpleador.codigo) {
@@ -137,6 +153,9 @@ export const HomeEmpleador = () => {
       ))}
     </ListGroup>
     <AgregarServicioEmpleador></AgregarServicioEmpleador>
+    <Button variant="primary" onClick={handleCerrarSesion}>
+      Cerrar Sesión
+    </Button>
     </>
   );
 };

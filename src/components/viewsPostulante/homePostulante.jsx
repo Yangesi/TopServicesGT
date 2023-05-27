@@ -5,12 +5,16 @@ import { useContext } from 'react';
 import { getServiciosPorCodigoPostulante } from '../../../helpers/servicioPostulante'
 import { actualizarPostulante } from '../../../helpers/postulante'
 import { AgregarServicioPostulante } from './componentesPostulante/agregarServicioPostulante'
+import { useNavigate } from "react-router-dom";
 
 
 //react bootstrap
 import { ListGroup, Button } from 'react-bootstrap';
 
 export const HomePostulante = () => {
+
+  //hook navigate
+  const navigate = useNavigate();
 
   const [datosPostulante, setDatosPostulante] = useState({
     apellido: '',
@@ -21,7 +25,7 @@ export const HomePostulante = () => {
     comentario: '',
   });
   const [datosServicios, setDatosServicios] = useState([]);
-  const { token, cod_usuario, setCodigo, codigo } = useContext(TokenContext);
+  const { token, setToken, cod_usuario, setCodigo, codigo } = useContext(TokenContext);
 
   useEffect(() => {
     if (token) {
@@ -40,8 +44,19 @@ export const HomePostulante = () => {
     } else {
       // Redireccionar a la página de inicio de sesión
       console.log('no existe');
+      // Redirigir a la página de inicio de sesión
+      let redirect = '/login';
+      navigate(redirect);
+      
     }
   }, [token, cod_usuario]);
+
+  //function para cerrar sesion
+  const handleCerrarSesion = () => {
+    // Eliminar el token estableciéndolo como una cadena vacía o null
+    setToken('');
+  
+  };
   
   useEffect(() => {
     if (codigo && token) {
@@ -146,6 +161,10 @@ const handleInputChange = (key, value) => {
   ))}
 </ListGroup>
 <AgregarServicioPostulante></AgregarServicioPostulante>
+<Button variant="primary" onClick={handleCerrarSesion}>
+  Cerrar Sesión
+</Button>
+
     </>
   )
 }

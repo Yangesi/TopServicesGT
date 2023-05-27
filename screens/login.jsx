@@ -6,7 +6,7 @@ import { useContext } from 'react';
 import { iniciarSesion } from '../helpers/usuario'
 import { useNavigate } from "react-router-dom";
 
-export const Login = () => {
+export const Login = () => {  
 
   const [correo, setCorreo] = useState('');
   const [clave, setClave] = useState('');

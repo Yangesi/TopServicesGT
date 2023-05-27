@@ -116,6 +116,40 @@ export const TarjetasServicios = () => {
       console.log('error al selecionar los radio button')
     }
   };
+
+  const handleEliminarServicio = async(index) => {
+
+    const servicio = serviciosEmpleadorSi[index];
+
+    const id = servicio.id;
+    const idServicioPostulante = servicio.id_servicio_postulante;
+
+    console.log(id)
+    console.log(idServicioPostulante)
+    console.log(token)
+    // Realizar la lógica para eliminar el servicio en la posición index
+    // Puedes utilizar el índice para acceder al servicio específico dentro del array serviciosEmpleadorSi
+    const actualizarServicioE = {
+      realizado: 0,
+      id_servicio_postulante: null, 
+      fecha_realizado: null
+    }
+
+    const actualizarServicioP = {
+      realizado: 0, 
+      fecha_realizado: null
+    }
+
+    const respuestaP = await actualizarServicioPostulante(idServicioPostulante, actualizarServicioP, token);
+    const respuestaE = await actualizarServicioEmpleador(id, actualizarServicioE, token);
+    
+
+    console.log(respuestaE)
+    console.log(respuestaP)
+  
+
+  };
+  
   
   //console.log("PostulantePorCodigo",serviciosPostulante)
   //console.log('id',seleccionEmpleador)
@@ -230,10 +264,13 @@ export const TarjetasServicios = () => {
           return <div>{fechaLegible}</div>;
         })()}
       </div>
-      
+      <Button variant="danger" onClick={() => handleEliminarServicio(index)}>
+        Eliminar
+      </Button>
     </ListGroup.Item>
   ))}
 </ListGroup>
+
  
           </Card.Text>
           <Button variant="primary" onClick={handleAsignarClick}>

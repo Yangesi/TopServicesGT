@@ -9,16 +9,24 @@ import { useContext } from 'react';
 import { TarjetasServicios } from './componentesAdmin/tarjetasServicios'
 import { EditarServicio } from './componentesAdmin/editarServicio'
 
+//navigate
+import { useNavigate } from "react-router-dom";
+
+//react bootstrap
+import { Button } from 'react-bootstrap';
 
 
 
 export const HomeAdmin = () => {
 
+  //hook navigate
+  const navigate = useNavigate();
+
   const [listaEmpleadores, setListaEmpleadores] = useState([]);
   const [listaPostulantes, setListaPostulantes] = useState([]);
   const [listaEmpleadoresPorCodigoS, setListaEmpleadoresPorCodigoS] = useState([]);
   
-  const { token } = useContext(TokenContext);
+  const { token, setToken } = useContext(TokenContext);
 
   useEffect(() => {
     if (token) {
@@ -48,9 +56,19 @@ export const HomeAdmin = () => {
     } else {
       // redireccionar a la página de inicio de sesión
       console.log('no existe')
+      // Redirigir a la página de inicio de sesión
+      let redirect = '/login';
+      navigate(redirect);
     }
     
   }, [token]);
+
+  //function para cerrar sesion
+  const handleCerrarSesion = () => {
+    // Eliminar el token estableciéndolo como una cadena vacía o null
+    setToken('');
+  
+  };
 
   
 
@@ -64,6 +82,9 @@ export const HomeAdmin = () => {
       <div>Hola Admin</div>
       <TarjetasServicios></TarjetasServicios>
       <EditarServicio></EditarServicio>
+      <Button variant="primary" onClick={handleCerrarSesion}>
+        Cerrar Sesión
+      </Button>
     </> 
   )
 }

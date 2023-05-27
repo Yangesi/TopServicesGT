@@ -5,7 +5,6 @@ import { Encabezado } from './components/viewsHome/encabezado'
 import { Cuerpo } from './components/viewsHome/cuerpo'
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
-import { Login } from '../screens/login'
 import { Registrarse } from '../screens/registrarse'
 import { List_check } from '../screens/forms/list_Servicios/list_check'
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -15,6 +14,9 @@ import { TokenContext } from './components/context/contexto';
 import { HomeAdmin } from './components/viewsAdmin/homeAdmin'
 import { HomeEmpleador } from './components/viewsEmpleador/homeEmpleador'
 import { HomePostulante } from './components/viewsPostulante/homePostulante'
+
+//import del login
+import { Login } from '../screens/login'
 
 function App() {
   const [token, setToken] = useState('');
