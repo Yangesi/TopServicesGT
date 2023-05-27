@@ -86,11 +86,10 @@ export const TarjetasServicios = () => {
 
   }, [codigoServicioSeleccionado])
   
-
   const handleServicioChange = (e) => {
     setCodigoServicioSeleccionado(e.target.value);
   };
-//pendiente de revisar, un useeffect no se puede usar dentro de un if
+
   const handleAsignarClick = async () => {
     if (seleccionEmpleador && seleccionPostulante) {
       const fechaActual = new Date().toISOString().slice(0, 19).replace('T', ' ');

@@ -40,7 +40,7 @@ export const crearPostulante = async (nuevoPostulante, token) => {
 };
 
 export const actualizarPostulante = async (codigo_postulante, datosPostulante, token) => {
-  const url = `https://apitopservicesgt-production.up.railway.app/api/postulante/${codigo_postulante}`;
+  const url = `https://apitopservicesgt-production.up.railway.app/api/postulantes/${codigo_postulante}`;
   const resp = await fetch(url, {
     method: 'PATCH',
     headers: {

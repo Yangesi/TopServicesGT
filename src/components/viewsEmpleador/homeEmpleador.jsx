@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { obtenerEmpleadorPorCodigo } from '../../../helpers/getEmpleador'
+import { obtenerEmpleadorPorCodigo, actualizarEmpleador } from '../../../helpers/getEmpleador'
 import { getServiciosPorCodigoEmpleador } from '../../../helpers/servicioEmpleador'
+import { AgregarServicioEmpleador } from './componentesEmpleador/agregarServicioEmpleador'
 
 import { TokenContext } from '../../../src/components/context/contexto';
 import { useContext } from 'react';
@@ -11,7 +12,13 @@ import { ListGroup, Button } from 'react-bootstrap';
 
 export const HomeEmpleador = () => {
 
-  const [datosEmpleador, setDatosEmpleador] = useState({});
+  const [datosEmpleador, setDatosEmpleador] = useState({
+    apellido: '',
+    nombre: '',
+    tel: '',
+    razon_social: '',
+  });
+
   const [datosServicios, setDatosServicios] = useState([]);
   const { token, cod_usuario, setCodigo, codigo } = useContext(TokenContext);
 
@@ -44,39 +51,64 @@ export const HomeEmpleador = () => {
   }, [datosEmpleador, setCodigo, token]);
 
     // Manejador de evento para editar un dato
-    const handleEditarDato = (dato) => {
-      // Implementa el código para editar el dato
-      console.log('Editar dato:', dato);
-    };
-  
-    // Manejador de evento para guardar cambios en un dato editado
-    const handleGuardarCambios = (dato) => {
-      // Implementa el código para guardar los cambios del dato
-      console.log('Guardar cambios:', dato);
+    const [editando, setEditando] = useState(false);
+
+    const handleEditar = () => {
+      setEditando(true);
     };
 
-    console.log(datosServicios)
+    // Manejador de evento para guardar cambios en un dato editado
+    const handleGuardarCambios = async() => {
+      setEditando(false);
+      // Aquí puedes realizar la lógica para guardar los cambios en el backend
+      const nuevoEmpleador = {
+        apellido: datosEmpleador.apellido,
+        nombre: datosEmpleador.nombre,
+        tel: datosEmpleador.tel,
+        razon_social: datosEmpleador.razon_social
+      }
+      //console.log("datosEmpleador",nuevoEmpleador)
+      
+      const data = await actualizarEmpleador(codigo, nuevoEmpleador, token)
+      console.log("respuesta",data)
+    };
+
+    const handleInputChange = (key, value) => {
+      setDatosEmpleador((prevDatos) => ({
+        ...prevDatos,
+        [key]: value,
+      }));
+    };
+
+    //console.log(datosServicios)
 
   return (
     <>
 <ListGroup>
-  {Object.keys(datosEmpleador).map((key, index) => {
-    if (["apellido", "nombre", "tel", "razon_social"].includes(key)) {
-      return (
-        <ListGroup.Item key={index}>
-          <span>{datosEmpleador[key]}</span>
-          <Button variant="primary" size="sm" onClick={() => handleEditarDato(datosEmpleador[key])}>
-            Editar
-          </Button>
-          <Button variant="success" size="sm" onClick={() => handleGuardarCambios(datosEmpleador[key])}>
-            Guardar Cambios
-          </Button>
-        </ListGroup.Item>
-      );
-    }
-    return null; // Omitir otras claves del objeto
-  })}
-</ListGroup>
+    {Object.keys(datosEmpleador).map((key, index) => {
+      if (["apellido", "nombre", "tel", "razon_social"].includes(key)) {
+        return (
+          <ListGroup.Item key={index}>
+            <span>{key}: </span>
+            <input
+              type="text"
+              value={datosEmpleador[key]}
+              onChange={(e) => handleInputChange(key, e.target.value)}
+              disabled={!editando}
+            />
+          </ListGroup.Item>
+        );
+      }
+      return null; // Omitir otras claves del objeto
+    })}
+    <Button variant="primary" size="sm" onClick={handleEditar} disabled={editando}>
+      Editar
+    </Button>
+    <Button variant="success" size="sm" onClick={handleGuardarCambios} disabled={!editando}>
+      Guardar Cambios
+    </Button>
+  </ListGroup>
+
  <ListGroup>
       {datosServicios.map((servicio, index) => (
         <ListGroup.Item key={index}>
@@ -104,6 +136,7 @@ export const HomeEmpleador = () => {
         </ListGroup.Item>
       ))}
     </ListGroup>
+    <AgregarServicioEmpleador></AgregarServicioEmpleador>
     </>
   );
 };

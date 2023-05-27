@@ -3,6 +3,9 @@ import { getPostulantePorCodigo } from '../../../helpers/postulante'
 import { TokenContext } from '../../../src/components/context/contexto';
 import { useContext } from 'react';
 import { getServiciosPorCodigoPostulante } from '../../../helpers/servicioPostulante'
+import { actualizarPostulante } from '../../../helpers/postulante'
+import { AgregarServicioPostulante } from './componentesPostulante/agregarServicioPostulante'
+
 
 //react bootstrap
 import { ListGroup, Button } from 'react-bootstrap';
@@ -57,9 +60,21 @@ const handleEditar = () => {
   setEditando(true);
 };
 
-const handleGuardarCambios = () => {
+const handleGuardarCambios = async() => {
   setEditando(false);
   // Aquí puedes realizar la lógica para guardar los cambios en el backend
+  const nuevoPostulante = {
+    apellido: datosPostulante.apellido,
+    nombre: datosPostulante.nombre,
+    tel: datosPostulante.tel,
+    //cv: datosPostulante.cv,
+    pretencion_salarial: datosPostulante.pretencion_salarial,
+    comentario: datosPostulante.comentario
+  }
+  //console.log("datosPostulante",nuevoPostulante)
+  console.log(codigo)
+  const data = await actualizarPostulante(codigo, nuevoPostulante, token)
+  console.log("respuesta",data)
 };
 
 const handleInputChange = (key, value) => {
@@ -71,8 +86,8 @@ const handleInputChange = (key, value) => {
   
 
 
-  console.log('datos del postulante',datosPostulante)
-  console.log('datos de los servicios',datosServicios)
+  //console.log('datos del postulante',datosPostulante)
+  //console.log('datos de los servicios',datosServicios)
 
   return (
     <>
@@ -130,6 +145,7 @@ const handleInputChange = (key, value) => {
     </ListGroup.Item>
   ))}
 </ListGroup>
+<AgregarServicioPostulante></AgregarServicioPostulante>
     </>
   )
 }
