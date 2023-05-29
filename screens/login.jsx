@@ -6,6 +6,8 @@ import { useContext } from 'react';
 import { iniciarSesion } from '../helpers/usuario'
 import { useNavigate } from "react-router-dom";
 
+import { Container, Row, Col } from "react-bootstrap";
+
 export const Login = () => {  
 
   const [correo, setCorreo] = useState('');
@@ -73,8 +75,10 @@ export const Login = () => {
   }
 
   return (
-  <div className="d-flex justify-content-center align-items-center" style={{ height: "80vh" }}>
-  <Card style={{ width: "40%" }}>
+    <Container fluid className="h-100 w-100">
+    <Row>
+    
+  <Card style={{ width: '18rem', marginTop: '100px' }} className="mx-auto">
       <Card.Header></Card.Header>
       <Card.Body>
         <Card.Title className="text-center">Inicia sesión</Card.Title>
@@ -110,7 +114,10 @@ export const Login = () => {
       </Card.Body>
       <Card.Footer className="text-muted"></Card.Footer>
     </Card>
-</div>
+
+</Row>
+</Container>
+
   )
 }
 

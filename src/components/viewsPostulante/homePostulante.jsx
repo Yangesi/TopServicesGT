@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 
 //react bootstrap
-import { ListGroup, Button } from 'react-bootstrap';
+import { ListGroup, Button, Card, Col, Row } from 'react-bootstrap';
 
 export const HomePostulante = () => {
 
@@ -103,69 +103,107 @@ const handleInputChange = (key, value) => {
 
   //console.log('datos del postulante',datosPostulante)
   //console.log('datos de los servicios',datosServicios)
+  console.log('cv', datosPostulante.cv)
 
   return (
     <>
-<ListGroup>
-    {Object.keys(datosPostulante).map((key, index) => {
-      if (["apellido", "nombre", "tel", "cv", "pretencion_salarial", "comentario"].includes(key)) {
-        return (
-          <ListGroup.Item key={index}>
-            <span>{key}: </span>
-            <input
-              type="text"
-              value={datosPostulante[key]}
-              onChange={(e) => handleInputChange(key, e.target.value)}
-              disabled={!editando}
-            />
-          </ListGroup.Item>
-        );
-      }
-      return null; // Omitir otras claves del objeto
-    })}
-    <Button variant="primary" size="sm" onClick={handleEditar} disabled={editando}>
-      Editar
-    </Button>
-    <Button variant="success" size="sm" onClick={handleGuardarCambios} disabled={!editando}>
-      Guardar Cambios
-    </Button>
-  </ListGroup>
-
-
-
-<ListGroup>
-  {datosServicios.map((servicio, index) => (
-    <ListGroup.Item key={index}>
-      <div className="fw-bold">
-        {servicio.tipo_servicio}
-      </div>
-      <div>{servicio.nombre}</div>
-      {(() => {
-        const fecha = new Date(servicio.fecha_hora);
-        const fechaLegible =
-          fecha.toLocaleDateString('es-ES') +
-          ' ' +
-          fecha.toLocaleTimeString('es-ES');
-        return <div>{fechaLegible}</div>;
-      })()}
-      {(() => {
-        const fecha = new Date(servicio.fecha_realizado);
-        const fechaLegible =
-          fecha.toLocaleDateString('es-ES') +
-          ' ' +
-          fecha.toLocaleTimeString('es-ES');
-        return <div>{fechaLegible}</div>;
-      })()}
-      {/* Puedes mostrar más propiedades del servicio según tus necesidades */}
-    </ListGroup.Item>
-  ))}
-</ListGroup>
-<AgregarServicioPostulante></AgregarServicioPostulante>
-<Button variant="primary" onClick={handleCerrarSesion}>
-  Cerrar Sesión
-</Button>
-
+      <h1>Postulante</h1>
+      <Row>
+        <Col>
+          <Card style={{ width: '70rem' }} className="mx-auto">
+            <Card.Header></Card.Header>
+            <Card.Body>
+              <Row>
+                <Col>
+                  <Card.Title className="text-center">Datos personales</Card.Title>
+                  <ListGroup>
+                    {Object.keys(datosPostulante).map((key, index) => {
+                      if (["apellido", "nombre", "tel", "cv", "pretencion_salarial", "comentario"].includes(key)) {
+                        return (
+                          <ListGroup.Item key={index}>
+                            <span>{key}: </span>
+                            <input
+                              type="text"
+                              value={datosPostulante[key]}
+                              onChange={(e) => handleInputChange(key, e.target.value)}
+                              disabled={!editando}
+                            />
+                          </ListGroup.Item>
+                        );
+                      }
+                      return null; // Omitir otras claves del objeto
+                    })}
+                  </ListGroup>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={handleEditar}
+                    disabled={editando}
+                    style={{ margin: '10px auto', display: 'block' }}
+                  >
+                    Editar
+                  </Button>
+                  <Button
+                    variant="success"
+                    size="sm"
+                    onClick={handleGuardarCambios}
+                    disabled={!editando}
+                    style={{ margin: '10px auto', display: 'block' }}
+                  >
+                    Guardar Cambios
+                  </Button>
+                </Col>
+                <Col>
+                  <Card.Title className="text-center">Servicios</Card.Title>
+                  <ListGroup>
+                    {datosServicios.map((servicio, index) => (
+                      <ListGroup.Item key={index}>
+                        <div className="fw-bold">
+                          {servicio.tipo_servicio}
+                        </div>
+                        <div>{servicio.nombre}</div>
+                        {(() => {
+                          const fecha = new Date(servicio.fecha_hora);
+                          const fechaLegible =
+                            fecha.toLocaleDateString('es-ES') +
+                            ' ' +
+                            fecha.toLocaleTimeString('es-ES');
+                          return <div>{fechaLegible}</div>;
+                        })()}
+                        {(() => {
+                          const fecha = new Date(servicio.fecha_realizado);
+                          const fechaLegible =
+                            fecha.toLocaleDateString('es-ES') +
+                            ' ' +
+                            fecha.toLocaleTimeString('es-ES');
+                          return <div>{fechaLegible}</div>;
+                        })()}
+                        {/* Puedes mostrar más propiedades del servicio según tus necesidades */}
+                      </ListGroup.Item>
+                    ))}
+                  </ListGroup>
+                  <br></br>
+                  <Card.Text>Agregar nuevo servicio</Card.Text>
+                  <AgregarServicioPostulante />
+                </Col>
+              </Row>
+            </Card.Body>
+            <Card.Footer className="text-muted"></Card.Footer>
+          </Card>
+        </Col>
+      </Row>
+      
+      <iframe
+        src="https://firebasestorage.googleapis.com/v0/b/top-services-gt.appspot.com/o/cv%2Ftarea6.docx?alt=media&token=ea8153ca-4460-4394-8168-96573785c091" // Aquí debes pasar la URL del documento almacenado en Firebase Storage
+        title="Visualización de documento"
+        width="100%"
+        height="600px"
+      ></iframe>
+  
+      <Button variant="primary" onClick={handleCerrarSesion}>
+        Cerrar Sesión
+      </Button>
     </>
-  )
-}
+  );
+}    
 
