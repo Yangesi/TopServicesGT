@@ -194,7 +194,7 @@ const handleInputChange = (key, value) => {
       </Row>
       
       <iframe
-        src="https://firebasestorage.googleapis.com/v0/b/top-services-gt.appspot.com/o/cv%2Ftarea6.docx?alt=media&token=ea8153ca-4460-4394-8168-96573785c091" // Aquí debes pasar la URL del documento almacenado en Firebase Storage
+        src="" // Aquí debes pasar la URL del documento almacenado en Firebase Storage
         title="Visualización de documento"
         width="100%"
         height="600px"

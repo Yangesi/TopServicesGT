@@ -97,6 +97,7 @@ export const HomeEmpleador = () => {
     };
 
     //console.log(datosServicios)
+    console.log(token)
 
   return (
     <>
