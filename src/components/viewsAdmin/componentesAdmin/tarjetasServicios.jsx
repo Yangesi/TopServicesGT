@@ -99,7 +99,7 @@ export const TarjetasServicios = () => {
         id_servicio_postulante: seleccionPostulante
       };
 
-      const data = await actualizarServicioEmpleador(seleccionEmpleador, servicioEmpleador, token);
+      //const data = await actualizarServicioEmpleador(seleccionEmpleador, servicioEmpleador, token);
 
       const servicioPostulante = {
         realizado: 1, 

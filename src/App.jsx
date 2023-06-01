@@ -17,6 +17,7 @@ import { HomePostulante } from './components/viewsPostulante/homePostulante'
 
 //import del login
 import { Login } from '../screens/login'
+import { RecuperarClave } from '../screens/recuperarClave'
 
 function App() {
   const [token, setToken] = useState('');
@@ -36,6 +37,7 @@ function App() {
       <Route path='/admin' element={<HomeAdmin/>}/>
       <Route path='/empleador' element={<HomeEmpleador/>}/>
       <Route path='/postulante' element={<HomePostulante/>}/>
+      <Route path='/recuperar-clave' element={<RecuperarClave/>}/>
         
       </Route>
     </Routes>

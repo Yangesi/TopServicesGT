@@ -71,7 +71,7 @@ export const solicitarCambioContrasena = async (datos) => {
 //peticion para asignar la nueva contraseña
 
 export const cambiarContrasena = async (datos) => {
-  const url = 'https://apitopservicesgt-production.up.railway.app/api/usuarios/cambiar-contrasena';
+  const url = `https://apitopservicesgt-production.up.railway.app/api/usuarios/cambiar-contrasena`;
   const resp = await fetch(url, {
     method: 'POST',
     headers: {
@@ -85,7 +85,7 @@ export const cambiarContrasena = async (datos) => {
 
 
 export const cambiarClaveAntigua = async (datos) => {
-  const url = 'https://apitopservicesgt-production.up.railway.app/api/usuarios/cambiar-clave-antigua';
+  const url = `https://apitopservicesgt-production.up.railway.app/api/usuarios/cambiar-clave-antigua`;
   const resp = await fetch(url, {
     method: 'POST',
     headers: {

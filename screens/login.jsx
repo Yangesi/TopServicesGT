@@ -4,7 +4,7 @@ import jwt_decode from 'jwt-decode';
 import { TokenContext } from '../src/components/context/contexto';
 import { useContext } from 'react';
 import { iniciarSesion } from '../helpers/usuario'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import { Container, Row, Col } from "react-bootstrap";
 
@@ -76,49 +76,49 @@ export const Login = () => {
 
   return (
     <Container fluid className="h-100 w-100">
-    <Row>
-    
-  <Card style={{ width: '18rem', marginTop: '100px' }} className="mx-auto">
-      <Card.Header></Card.Header>
-      <Card.Body>
-        <Card.Title className="text-center">Inicia sesión</Card.Title>
-        <Card.Text>
-        <Form onSubmit={handleSubmit}>
-        <Form.Group className="mb-3" controlId="Correo">
-            <Form.Label>Correo</Form.Label>
-            <Form.Control
-              type="email"
-              name="email"
-              placeholder="name@example.com"
-              value={correo}
-              onChange={handleEmailChange}
-              required
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="Password">
-            <Form.Label>Contraseña</Form.Label>
-            <Form.Control
-              type="password"
-              value={clave}
-              onChange={handlePasswordChange}
-              name="password"
-            />
-          </Form.Group>
-        <div className="d-flex justify-content-center">
-        <Button className="mt-3" variant="primary" type="submit">
-        Iniciar sesión
-        </Button>  
-      </div>
-    </Form>
-        </Card.Text>
-      </Card.Body>
-      <Card.Footer className="text-muted"></Card.Footer>
-    </Card>
-
-</Row>
-</Container>
-
-  )
+      <Row>
+        <Card style={{ width: '18rem', marginTop: '100px' }} className="mx-auto">
+          <Card.Header></Card.Header>
+          <Card.Body>
+            <Card.Title className="text-center">Inicia sesión</Card.Title>
+            <Card.Text>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3" controlId="Correo">
+                  <Form.Label>Correo</Form.Label>
+                  <Form.Control
+                    type="email"
+                    name="email"
+                    placeholder="name@example.com"
+                    value={correo}
+                    onChange={handleEmailChange}
+                    required
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="Password">
+                  <Form.Label>Contraseña</Form.Label>
+                  <Form.Control
+                    type="password"
+                    value={clave}
+                    onChange={handlePasswordChange}
+                    name="password"
+                  />
+                </Form.Group>
+                <div className="d-flex justify-content-center">
+                  <Button className="mt-3" variant="primary" type="submit">
+                    Iniciar sesión
+                  </Button>  
+                </div>
+                <div className="d-flex justify-content-center mt-3">
+                  <Link to="/recuperar-clave">Olvidaste tu contraseña?</Link>
+                </div>
+              </Form>
+            </Card.Text>
+          </Card.Body>
+          <Card.Footer className="text-muted"></Card.Footer>
+        </Card>
+      </Row>
+    </Container>
+  );
 }
 
 
