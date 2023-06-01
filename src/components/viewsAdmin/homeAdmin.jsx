@@ -75,7 +75,7 @@ export const HomeAdmin = () => {
   //console.log(listaEmpleadores)
   //console.log(listaPostulantes)
   //console.log(serviciosPostulantes)
-  //console.log(token)
+  console.log(token)
 
   return (
     <>

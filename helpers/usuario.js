@@ -54,3 +54,47 @@ export const iniciarSesion = async (credenciales) => {
   return jsonData;
 };
 
+
+export const solicitarCambioContrasena = async (datos) => {
+  const url = `https://apitopservicesgt-production.up.railway.app/api/usuarios/solicitar-cambio-contrasena`;
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(datos)
+  });
+  const jsonData = await resp.json();
+  return jsonData;
+};
+
+//peticion para asignar la nueva contraseña
+
+export const cambiarContrasena = async (datos) => {
+  const url = 'https://apitopservicesgt-production.up.railway.app/api/usuarios/cambiar-contrasena';
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(datos)
+  });
+  const jsonData = await resp.json();
+  return jsonData;
+};
+
+
+export const cambiarClaveAntigua = async (datos) => {
+  const url = 'https://apitopservicesgt-production.up.railway.app/api/usuarios/cambiar-clave-antigua';
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'authorization': `Bearer ${token}` // Asegúrate de tener el token válido para enviar en el encabezado
+    },
+    body: JSON.stringify(datos)
+  });
+  const jsonData = await resp.json();
+  return jsonData;
+};
+
