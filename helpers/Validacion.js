@@ -2,21 +2,21 @@ export function capitalizeWords(str) {
   return str.replace(/\b\w/g, (char) => char.toLocaleUpperCase());
 }
 
-function validarNombre(nombre) {
+export function validarNombre(nombre) {
   const regex = /^[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*$/;
   const nombreCapitalizado = capitalizeWords(nombre);
 
   return regex.test(nombreCapitalizado);
 }
 
-function validarApellido(apellido) {
+export function validarApellido(apellido) {
   const regex = /^[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*$/;
   const apellidoCapitalizado = capitalizeWords(apellido);
 
   return regex.test(apellidoCapitalizado);
 }
 
-function validarPretensionSalarial(pretensionSalarial) {
+export function validarPretensionSalarial(pretensionSalarial) {
   return pretensionSalarial > 0;
 }
 
@@ -32,7 +32,7 @@ export function validarPassword(password) {
   return regex.test(password);
 }
 
-function validarTel(tel) {
+export function validarTel(tel) {
   const regex = /^\+[0-9]{1,3}-[0-9]{1,14}$/;
 
   return regex.test(tel);

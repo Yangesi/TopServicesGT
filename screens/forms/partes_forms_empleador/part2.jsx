@@ -3,6 +3,7 @@ import { Modal, Form, Button } from "react-bootstrap";
 import { TokenContext } from '../../../src/components/context/contexto';
 import { useContext } from 'react';
 import { crearDatosEmpleador } from '../../../helpers/getEmpleador'
+import { validarNombre, validarApellido, validarTel } from '../../../helpers/Validacion';
 
 export function SegundoFormulario({ show, handleClose, form3 }) {
   const [nombre, setNombre] = useState('');
@@ -10,18 +11,27 @@ export function SegundoFormulario({ show, handleClose, form3 }) {
   const [razon_social, setRazonSocial] = useState('');
   const [tel, setTelefono] = useState('');
 
+  //estados de validaciones
+  const [nombreError, setNombreError] = useState(true);
+  const [apellidoError, setApellidoError] = useState(true);
+  const [telError, setTelefonoError] = useState(true);
+
   //mi contexto para obtener el token y cod_usuario
   const { token, cod_usuario } = useContext(TokenContext);
   const { codigo, setCodigo } = useContext(TokenContext);
-  console.log('hola')
+  //console.log('hola')
   console.log(token, cod_usuario, codigo)
 
   const handleNombreChange = (e) => {
-    setNombre(e.target.value);
+    const value = e.target.value;
+    setNombre(value);
+    setNombreError(validarNombre(value)); // Reiniciar el estado del error al cambiar el nombre
   };
-  
+
   const handleApellidoChange = (e) => {
-    setApellido(e.target.value);
+    const value = e.target.value;
+    setApellido(value);
+    setApellidoError(validarApellido(value)); // Reiniciar el estado del error al cambiar el apellido
   };
   
   const handleRazonSocialChange = (e) => {
@@ -29,11 +39,14 @@ export function SegundoFormulario({ show, handleClose, form3 }) {
   };
   
   const handleTelefonoChange = (e) => {
-    setTelefono(e.target.value);
+    const value = e.target.value;
+    setTelefono(value);
+    setTelefonoError(validarTel(value)); // Reiniciar el estado del error al cambiar el teléfono
   };
   
   const handleSubmit = (e) => {
     e.preventDefault();
+
     // Aquí puedes agregar la lógica para enviar los datos del segundo formulario a la API
     enviarDatos();
   };
@@ -70,18 +83,28 @@ export function SegundoFormulario({ show, handleClose, form3 }) {
               type="text"
               placeholder="Ingresa tu nombre"
               autoFocus
+              value={nombre}
               onChange={handleNombreChange}
               required
+              isInvalid={!nombreError}
             />
+            <Form.Control.Feedback type="invalid">
+              Nombre inválido
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-3" controlId="Apellido">
             <Form.Label>Apellido</Form.Label>
             <Form.Control
               type="text"
               placeholder="Ingresa tu apellido"
+              value={apellido}
               onChange={handleApellidoChange}
               required
+              isInvalid={!apellidoError}
             />
+            <Form.Control.Feedback type="invalid">
+              Apellido inválido
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-3" controlId="Razon">
             <Form.Label>Razón social</Form.Label>
@@ -89,7 +112,6 @@ export function SegundoFormulario({ show, handleClose, form3 }) {
               type="text"
               placeholder="Ingresa tu razón social"
               onChange={handleRazonSocialChange}
-              required
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="Telefono">
@@ -97,18 +119,31 @@ export function SegundoFormulario({ show, handleClose, form3 }) {
             <Form.Control
               type="text"
               placeholder="Ingresa tu teléfono"
+              value={tel}
               onChange={handleTelefonoChange}
               required
+              isInvalid={!telError}
             />
+            <Form.Control.Feedback type="invalid">
+              Teléfono inválido
+            </Form.Control.Feedback>
           </Form.Group>
           <Button variant="secondary" onClick={handleClose}>
             Cancelar
           </Button>
-          <Button variant="primary" type="submit" onClick={() => { form3(); handleClose(); }}>
+          <Button
+            variant="primary"
+            type="submit"
+            onClick={() => {
+              form3();
+              handleClose();
+            }}
+            disabled={!nombreError || !apellidoError || !telError} // Deshabilita el botón si hay algún error
+          >
             Siguiente
           </Button>
         </Form>
       </Modal.Body>
     </Modal>
   );
-}
+}  

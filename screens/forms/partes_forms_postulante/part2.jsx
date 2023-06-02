@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, Form, Button } from "react-bootstrap";
 import { TokenContext } from '../../../src/components/context/contexto';
 import { useContext } from 'react';
@@ -6,6 +6,7 @@ import { crearPostulante } from '../../../helpers/postulante'
 
 import { storage } from '../../../src/firebase/configFirebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { validarNombre, validarApellido, validarTel, validarPretensionSalarial } from '../../../helpers/Validacion';
 
 export function SegundoFormularioP({ show, handleClose, form3 }) {
 
@@ -18,25 +19,40 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
   const [url_cv, setUrl_cv] = useState(null);
   const [error, setError] = useState(null);
 
+  //estados de validaciones
+  const [nombreError, setNombreError] = useState(true);
+  const [apellidoError, setApellidoError] = useState(true);
+  const [telError, setTelefonoError] = useState(true);
+  const [pretension_salarialError, setPretensionError] = useState(true);
+  const [isFormValid, setIsFormValid] = useState(false);
+
   //mi contexto para obtener el token y cod_usuario
   const { token, cod_usuario } = useContext(TokenContext);
   const { codigo, setCodigo } = useContext(TokenContext);
   console.log(token, cod_usuario, codigo)
 
   const handleNombreChange = (e) => {
-    setNombre(e.target.value);
+    const value = e.target.value;
+    setNombre(value);
+    setNombreError(validarNombre(value)); // Reiniciar el estado del error al cambiar el nombre
   };
   
   const handleApellidoChange = (e) => {
-    setApellido(e.target.value);
+    const value = e.target.value;
+    setApellido(value);
+    setApellidoError(validarApellido(value)); // Reiniciar el estado del error al cambiar el apellido
   };
 
   const handleTelefonoChange = (e) => {
-    setTelefono(e.target.value);
+    const value = e.target.value;
+    setTelefono(value);
+    setTelefonoError(validarTel(value)); // Reiniciar el estado del error al cambiar el teléfono
   };
  
   const handlePretensionChange = (e) => {
-    setPretension(e.target.value);
+    const value = e.target.value;
+    setPretension(value);
+    setPretensionError(validarPretensionSalarial(value)); // Reiniciar el estado del error al cambiar el nombre
   };
 
   const handleComentarioChange = (e) => {
@@ -47,6 +63,18 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
     const file = event.target.files[0];
     setUrl_cv(file);
   }
+
+  //validando el formulario 
+  useEffect(() => {
+    // Validar el formulario cuando cambien los valores de los campos
+    setIsFormValid(
+      nombreError &&
+      apellidoError &&
+      telError &&
+      pretension_salarialError
+    );
+  }, [nombreError, apellidoError, telError, pretension_salarialError]);
+  
   
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -108,8 +136,10 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
               type="text"
               placeholder="Ingresa tu nombre"
               autoFocus
+              value={nombre}
               onChange={handleNombreChange}
               required
+              isInvalid={!nombreError}
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="Apellido">
@@ -117,8 +147,10 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
             <Form.Control
               type="text"
               placeholder="Ingresa tu apellido"
+              value={apellido}
               onChange={handleApellidoChange}
               required
+              isInvalid={!apellidoError}
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="Telefono">
@@ -126,8 +158,10 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
             <Form.Control
               type="text"
               placeholder="Ingresa tu teléfono"
+              value={tel}
               onChange={handleTelefonoChange}
               required
+              isInvalid={!telError}
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="PretensionSalarial">
@@ -135,8 +169,10 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
               <Form.Control
                 type="number"
                 placeholder="Ingresa tu pretensión salarial"
+                value={pretencion_salarial}
                 onChange={handlePretensionChange}
-                
+                required
+                isInvalid={!pretension_salarialError}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="CV">
@@ -161,7 +197,9 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
           <Button variant="secondary" onClick={handleClose}>
             Cancelar
           </Button>
-          <Button variant="primary" type="submit" onClick={() => { form3(); handleClose(); }}>
+          <Button variant="primary" type="submit" onClick={() => { form3(); handleClose(); }}
+          disabled={!isFormValid} // Deshabilita el botón si hay algún error
+          >
             Siguiente
           </Button>
         </Form>

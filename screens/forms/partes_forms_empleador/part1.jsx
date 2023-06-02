@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { TokenContext } from '../../../src/components/context/contexto';
 import { useContext } from 'react';
 import { validarCorreo, validarPassword } from '../../../helpers/Validacion'
-
+                          
 export function PrimerFormulario({ show, handleClose, form2 }) {
   const [correo, setCorreo] = useState('');
   const [clave, setClave] = useState('');

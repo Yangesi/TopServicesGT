@@ -18,6 +18,7 @@ import { HomePostulante } from './components/viewsPostulante/homePostulante'
 //import del login
 import { Login } from '../screens/login'
 import { RecuperarClave } from '../screens/recuperarClave'
+import { CambiarClave } from '../screens/cambiarClave'
 
 function App() {
   const [token, setToken] = useState('');
@@ -38,6 +39,7 @@ function App() {
       <Route path='/empleador' element={<HomeEmpleador/>}/>
       <Route path='/postulante' element={<HomePostulante/>}/>
       <Route path='/recuperar-clave' element={<RecuperarClave/>}/>
+      <Route path='/cambiar-clave' element={<CambiarClave/>}/>
         
       </Route>
     </Routes>

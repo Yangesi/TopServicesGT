@@ -5,7 +5,7 @@ import { useContext } from 'react';
 import { getServiciosPorCodigoPostulante } from '../../../helpers/servicioPostulante'
 import { actualizarPostulante } from '../../../helpers/postulante'
 import { AgregarServicioPostulante } from './componentesPostulante/agregarServicioPostulante'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 
 //react bootstrap
@@ -152,6 +152,9 @@ const handleInputChange = (key, value) => {
                   >
                     Guardar Cambios
                   </Button>
+                  <div className="d-flex justify-content-center mt-3">
+                      <Link to="/cambiar-clave">Cambiar contraseña</Link>
+                  </div>
                 </Col>
                 <Col>
                   <Card.Title className="text-center">Servicios</Card.Title>

@@ -84,7 +84,7 @@ export const cambiarContrasena = async (datos) => {
 };
 
 
-export const cambiarClaveAntigua = async (datos) => {
+export const cambiarClaveAntigua = async (datos, token) => {
   const url = `https://apitopservicesgt-production.up.railway.app/api/usuarios/cambiar-clave-antigua`;
   const resp = await fetch(url, {
     method: 'POST',

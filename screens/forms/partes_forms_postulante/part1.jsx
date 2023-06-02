@@ -1,23 +1,32 @@
 import { crearPostulante } from '../../../helpers/usuario';
 import { Modal, Form, Button } from "react-bootstrap";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TokenContext } from '../../../src/components/context/contexto';
 import { useContext } from 'react';
+import { validarCorreo, validarPassword } from '../../../helpers/Validacion';
 
-export function PrimerFormularioP({show, handleClose, form2}) {
+export function PrimerFormularioP({ show, handleClose, form2 }) {
   const [correo, setCorreo] = useState('');
   const [clave, setClave] = useState('');
 
-  //actualizar mi contexto
+  //validaciones del formulario
+  const [correoValido, setCorreoValido] = useState(true);
+  const [claveValida, setClaveValida] = useState(true);
+  const [isFormValid, setIsFormValid] = useState(true);
+
+  // Actualizar mi contexto
   const { setToken, setCod_usuario } = useContext(TokenContext);
 
-
   const handleEmailChange = (event) => {
-    setCorreo(event.target.value);
+    const value = event.target.value;
+    setCorreo(value);
+    setCorreoValido(validarCorreo(value));
   };
 
   const handlePasswordChange = (event) => {
-    setClave(event.target.value);
+    const value = event.target.value;
+    setClave(value);
+    setClaveValida(validarPassword(value));
   };
 
   const handleSubmit = (event) => {
@@ -26,22 +35,33 @@ export function PrimerFormularioP({show, handleClose, form2}) {
   };
 
   const enviarDatos = async () => {
+    if (correoValido && claveValida) {
+      const nuevoPostulante = {
+        correo,
+        clave
+      };
 
-    const nuevoPostulante = {
-      correo,
-      clave
-    };
+      const respuestaPostulante = await crearPostulante(nuevoPostulante);
 
-    const respuestaPostulante = await crearPostulante(nuevoPostulante);
+      console.log(respuestaPostulante);
+      const datoToken = respuestaPostulante.token;
+      const datoCodUsuario = respuestaPostulante.codigo;
 
-    console.log(respuestaPostulante);
-    const datoToken = respuestaPostulante.token;
-    const datoCodUsuario = respuestaPostulante.codigo;
-
-    setToken(datoToken);
-    setCod_usuario(datoCodUsuario);
-    
+      setToken(datoToken);
+      setCod_usuario(datoCodUsuario);
+    }
   }
+
+  //validando el formulario 
+  useEffect(() => {
+    // Validar el formulario cuando cambien los valores de los campos
+    setIsFormValid(
+      !correoValido &&
+      !claveValida
+    );
+  }, [correoValido, claveValida]);
+
+  //const isBotonSiguienteDisabled = !correoValido || !claveValida;
 
   return (
     <Modal show={show} onHide={handleClose}>
@@ -59,7 +79,11 @@ export function PrimerFormularioP({show, handleClose, form2}) {
               value={correo}
               onChange={handleEmailChange}
               required
+              isInvalid={!correoValido}
             />
+            <Form.Control.Feedback type="invalid">
+              Correo incorrecto
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-3" controlId="Password">
             <Form.Label>Contraseña</Form.Label>
@@ -68,16 +92,26 @@ export function PrimerFormularioP({show, handleClose, form2}) {
               value={clave}
               onChange={handlePasswordChange}
               name="password"
+              isInvalid={!claveValida}
             />
+            <Form.Control.Feedback type="invalid">
+              Clave incorrecta
+            </Form.Control.Feedback>
           </Form.Group>
           <Button variant="secondary" onClick={handleClose}>
             Cancelar
           </Button>
-          <Button variant="primary" type="submit"
-          onClick={() => { form2(); handleClose(); }}>
+          <Button
+            variant="primary"
+            type="submit"
+            onClick={() => {
+              form2();
+              handleClose();
+            }}
+            disabled={!isFormValid} // Deshabilita el botón si hay algún error
+          >
             Siguiente
           </Button>
-
         </Form>
       </Modal.Body>
     </Modal>
