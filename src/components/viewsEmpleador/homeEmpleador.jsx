@@ -7,7 +7,7 @@ import { TokenContext } from '../../../src/components/context/contexto';
 import { useContext } from 'react';
 
 //react bootstrap
-import { ListGroup, Button } from 'react-bootstrap';
+import { ListGroup, Button, Card, Col, Row } from 'react-bootstrap';
 
 //navigate
 import { useNavigate } from "react-router-dom";
@@ -99,64 +99,98 @@ export const HomeEmpleador = () => {
     //console.log(datosServicios)
     console.log(token)
 
-  return (
-    <>
-<ListGroup>
-    {Object.keys(datosEmpleador).map((key, index) => {
-      if (["apellido", "nombre", "tel", "razon_social"].includes(key)) {
-        return (
-          <ListGroup.Item key={index}>
-            <span>{key}: </span>
-            <input
-              type="text"
-              value={datosEmpleador[key]}
-              onChange={(e) => handleInputChange(key, e.target.value)}
-              disabled={!editando}
-            />
-          </ListGroup.Item>
-        );
-      }
-      return null; // Omitir otras claves del objeto
-    })}
-    <Button variant="primary" size="sm" onClick={handleEditar} disabled={editando}>
-      Editar
-    </Button>
-    <Button variant="success" size="sm" onClick={handleGuardarCambios} disabled={!editando}>
-      Guardar Cambios
-    </Button>
-  </ListGroup>
+    return (
+      <>
+        <Row>
+          <Col>
+            <Card style={{ width: '70rem' }} className="mx-auto">
+              <Card.Header></Card.Header>
+              <Card.Body>
+                <Row>
+                  <Col>
+                    <Card.Title className="text-center">Datos personales</Card.Title>
+                    <ListGroup>
+                      {Object.keys(datosEmpleador).map((key, index) => {
+                        if (["apellido", "nombre", "tel", "razon_social"].includes(key)) {
+                          return (
+                            <ListGroup.Item key={index}>
+                              <span>{key}: </span>
+                              <input
+                                type="text"
+                                value={datosEmpleador[key]}
+                                onChange={(e) => handleInputChange(key, e.target.value)}
+                                disabled={!editando}
+                              />
+                            </ListGroup.Item>
+                          );
+                        }
+                        return null; // Omitir otras claves del objeto
+                      })}
+                    </ListGroup>
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      onClick={handleEditar}
+                      disabled={editando}
+                      style={{ margin: '10px auto', display: 'block' }}
+                    >
+                      Editar
+                    </Button>
+                    <Button
+                      variant="success"
+                      size="sm"
+                      onClick={handleGuardarCambios}
+                      disabled={!editando}
+                      style={{ margin: '10px auto', display: 'block' }}
+                    >
+                      Guardar Cambios
+                    </Button>
 
- <ListGroup>
-      {datosServicios.map((servicio, index) => (
-        <ListGroup.Item key={index}>
-        <div className="fw-bold">
-          {servicio.tipo_servicio}
-        </div>
-        <div>{servicio.nombre}</div>
-        {(() => {
-          const fecha = new Date(servicio.fecha_hora);
-          const fechaLegible =
-            fecha.toLocaleDateString('es-ES') +
-            ' ' +
-            fecha.toLocaleTimeString('es-ES');
-          return <div>{fechaLegible}</div>;
-        })()}
-        {(() => {
-          const fecha = new Date(servicio.fecha_realizado);
-          const fechaLegible =
-            fecha.toLocaleDateString('es-ES') +
-            ' ' +
-            fecha.toLocaleTimeString('es-ES');
-          return <div>{fechaLegible}</div>;
-        })()}
-          {/* Puedes mostrar más propiedades del servicio según tus necesidades */}
-        </ListGroup.Item>
-      ))}
-    </ListGroup>
-    <AgregarServicioEmpleador></AgregarServicioEmpleador>
-    <Button variant="primary" onClick={handleCerrarSesion}>
-      Cerrar Sesión
-    </Button>
-    </>
-  );
-};
+          </Col>
+    
+          <Col>
+            <Card.Title className="text-center">Servicios</Card.Title>
+            <ListGroup>
+              {datosServicios.map((servicio, index) => (
+                <ListGroup.Item key={index}>
+                  <div className="fw-bold">
+                    {servicio.tipo_servicio}
+                  </div>
+                  <div>{servicio.nombre}</div>
+                  {(() => {
+                    const fecha = new Date(servicio.fecha_hora);
+                    const fechaLegible =
+                      fecha.toLocaleDateString('es-ES') +
+                      ' ' +
+                      fecha.toLocaleTimeString('es-ES');
+                    return <div>{fechaLegible}</div>;
+                  })()}
+                  {(() => {
+                    const fecha = new Date(servicio.fecha_realizado);
+                    const fechaLegible =
+                      fecha.toLocaleDateString('es-ES') +
+                      ' ' +
+                      fecha.toLocaleTimeString('es-ES');
+                    return <div>{fechaLegible}</div>;
+                  })()}
+                  {/* Puedes mostrar más propiedades del servicio según tus necesidades */}
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+            <br></br>
+            <Card.Text>Agregar nuevo servicio</Card.Text>
+            <AgregarServicioEmpleador />
+            </Col>
+              </Row>
+            </Card.Body>
+            <Card.Footer className="text-muted"></Card.Footer>
+          </Card>
+          </Col>
+        </Row>
+    
+        <Button variant="primary" onClick={handleCerrarSesion}>
+          Cerrar Sesión
+        </Button>
+      </>
+    );
+                }    
