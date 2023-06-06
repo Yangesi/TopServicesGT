@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, Form, Button } from "react-bootstrap";
 import { TokenContext } from '../../../src/components/context/contexto';
 import { useContext } from 'react';
@@ -11,48 +11,51 @@ export function SegundoFormulario({ show, handleClose, form3 }) {
   const [razon_social, setRazonSocial] = useState('');
   const [tel, setTelefono] = useState('');
 
-  //estados de validaciones
-  const [nombreError, setNombreError] = useState(true);
-  const [apellidoError, setApellidoError] = useState(true);
-  const [telError, setTelefonoError] = useState(true);
+  // Estados de validaciones
+  const [nombreError, setNombreError] = useState(false);
+  const [apellidoError, setApellidoError] = useState(false);
+  const [telError, setTelefonoError] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(true);
 
-  //mi contexto para obtener el token y cod_usuario
+  // Mi contexto para obtener el token y cod_usuario
   const { token, cod_usuario } = useContext(TokenContext);
   const { codigo, setCodigo } = useContext(TokenContext);
-  //console.log('hola')
-  console.log(token, cod_usuario, codigo)
 
   const handleNombreChange = (e) => {
     const value = e.target.value;
     setNombre(value);
-    setNombreError(validarNombre(value)); // Reiniciar el estado del error al cambiar el nombre
+    setNombreError(validarNombre(value));
   };
 
   const handleApellidoChange = (e) => {
     const value = e.target.value;
     setApellido(value);
-    setApellidoError(validarApellido(value)); // Reiniciar el estado del error al cambiar el apellido
+    setApellidoError(validarApellido(value));
   };
-  
+
   const handleRazonSocialChange = (e) => {
     setRazonSocial(e.target.value);
   };
-  
+
   const handleTelefonoChange = (e) => {
     const value = e.target.value;
     setTelefono(value);
-    setTelefonoError(validarTel(value)); // Reiniciar el estado del error al cambiar el teléfono
+    setTelefonoError(validarTel(value));
   };
-  
+
+  useEffect(() => {
+    // Validar el formulario cuando cambien los valores de los campos
+    setIsFormValid(nombreError && apellidoError && telError);
+  }, [nombreError, apellidoError, telError]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     // Aquí puedes agregar la lógica para enviar los datos del segundo formulario a la API
     enviarDatos();
-  };
+  }
 
   const enviarDatos = async () => {
-
     const datosEmpleador = {
       nombre,
       apellido,
@@ -67,8 +70,7 @@ export function SegundoFormulario({ show, handleClose, form3 }) {
     const datoCodEmpleador = respuestaEmpleador.codigo;
     console.log(datoCodEmpleador);
     setCodigo(datoCodEmpleador);
-    
-  }
+  };
   
   return (
     <Modal show={show} onHide={handleClose}>
@@ -138,7 +140,7 @@ export function SegundoFormulario({ show, handleClose, form3 }) {
               form3();
               handleClose();
             }}
-            disabled={!nombreError || !apellidoError || !telError} // Deshabilita el botón si hay algún error
+            disabled={!isFormValid} // Deshabilita el botón si hay algún error
           >
             Siguiente
           </Button>

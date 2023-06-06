@@ -1,6 +1,6 @@
 import { crearEmpleador } from '../../../helpers/getEmpleador';
 import { Modal, Form, Button } from "react-bootstrap";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TokenContext } from '../../../src/components/context/contexto';
 import { useContext } from 'react';
 import { validarCorreo, validarPassword } from '../../../helpers/Validacion'
@@ -8,8 +8,9 @@ import { validarCorreo, validarPassword } from '../../../helpers/Validacion'
 export function PrimerFormulario({ show, handleClose, form2 }) {
   const [correo, setCorreo] = useState('');
   const [clave, setClave] = useState('');
-  const [correoValido, setCorreoValido] = useState(true);
-  const [claveValida, setClaveValida] = useState(true);
+  const [correoValido, setCorreoValido] = useState(false);
+  const [claveValida, setClaveValida] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(true);
 
   // Actualizar mi contexto
   const { setToken, setCod_usuario } = useContext(TokenContext);
@@ -47,9 +48,11 @@ export function PrimerFormulario({ show, handleClose, form2 }) {
       setToken(datoToken);
       setCod_usuario(datoCodUsuario);
     }
-  }
+  };
 
-  const isBotonSiguienteDisabled = !correoValido || !claveValida;
+  useEffect(() => {
+    setIsFormValid(correoValido && claveValida);
+  }, [correoValido, claveValida]);
 
   return (
     <Modal show={show} onHide={handleClose}>
@@ -96,7 +99,7 @@ export function PrimerFormulario({ show, handleClose, form2 }) {
               form2();
               handleClose();
             }}
-            disabled={isBotonSiguienteDisabled}
+            disabled={!isFormValid}
           >
             Siguiente
           </Button>
@@ -105,6 +108,3 @@ export function PrimerFormulario({ show, handleClose, form2 }) {
     </Modal>
   );
 }
-
-
-

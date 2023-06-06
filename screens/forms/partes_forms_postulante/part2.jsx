@@ -20,11 +20,11 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
   const [error, setError] = useState(null);
 
   //estados de validaciones
-  const [nombreError, setNombreError] = useState(true);
-  const [apellidoError, setApellidoError] = useState(true);
-  const [telError, setTelefonoError] = useState(true);
-  const [pretension_salarialError, setPretensionError] = useState(true);
-  const [isFormValid, setIsFormValid] = useState(false);
+  const [nombreError, setNombreError] = useState(false);
+  const [apellidoError, setApellidoError] = useState(false);
+  const [telError, setTelefonoError] = useState(false);
+  const [pretension_salarialError, setPretensionError] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(true);
 
   //mi contexto para obtener el token y cod_usuario
   const { token, cod_usuario } = useContext(TokenContext);
@@ -101,7 +101,7 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
       const datosPostulante = {
         nombre,
         apellido,
-        pretencion_salarial,
+        pretencion_salarial: parseInt(pretencion_salarial),
         comentario,
         cv,
         codigo_usuario: cod_usuario,

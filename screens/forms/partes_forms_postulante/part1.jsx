@@ -10,8 +10,8 @@ export function PrimerFormularioP({ show, handleClose, form2 }) {
   const [clave, setClave] = useState('');
 
   //validaciones del formulario
-  const [correoValido, setCorreoValido] = useState(true);
-  const [claveValida, setClaveValida] = useState(true);
+  const [correoValido, setCorreoValido] = useState(false);
+  const [claveValida, setClaveValida] = useState(false);
   const [isFormValid, setIsFormValid] = useState(true);
 
   // Actualizar mi contexto
@@ -56,8 +56,8 @@ export function PrimerFormularioP({ show, handleClose, form2 }) {
   useEffect(() => {
     // Validar el formulario cuando cambien los valores de los campos
     setIsFormValid(
-      !correoValido &&
-      !claveValida
+      correoValido &&
+      claveValida
     );
   }, [correoValido, claveValida]);
 
