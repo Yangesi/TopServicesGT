@@ -75,12 +75,39 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
     );
   }, [nombreError, apellidoError, telError, pretension_salarialError]);
   
-  
+  useEffect(() => {
+    const envio = async() => {
+    const datosPostulante = {
+      nombre,
+      apellido,
+      pretencion_salarial: parseInt(pretencion_salarial),
+      comentario,
+      cv,
+      codigo_usuario: cod_usuario,
+      tel
+    };
+
+    console.log('probando mi cv', datosPostulante);
+
+    const respuestaPostulante = await crearPostulante(datosPostulante, token);
+
+    console.log(respuestaPostulante);
+    const datoCodPostulante = respuestaPostulante.codigo;
+    console.log(datoCodPostulante);
+    setCodigo(datoCodPostulante);
+  }
+    envio();
+
+  }, [cv])
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // Aquí puedes agregar la lógica para enviar los datos del segundo formulario a la API
     enviarDatos();
   };
+
+  
+  
 
   const enviarDatos = async () => {
     try {
@@ -93,29 +120,12 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
           const url = await getDownloadURL(storageRef);
           console.log(`URL de descarga: ${url}`);
           setCv(url);
+
+          
         } catch (error) {
           console.error(`Error al obtener la URL de descarga: ${error}`);
         }
       }
-  
-      const datosPostulante = {
-        nombre,
-        apellido,
-        pretencion_salarial: parseInt(pretencion_salarial),
-        comentario,
-        cv,
-        codigo_usuario: cod_usuario,
-        tel
-      };
-  
-      console.log('probando mi cv', datosPostulante);
-  
-      const respuestaPostulante = await crearPostulante(datosPostulante, token);
-  
-      console.log(respuestaPostulante);
-      const datoCodPostulante = respuestaPostulante.codigo;
-      console.log(datoCodPostulante);
-      setCodigo(datoCodPostulante);
     } catch (error) {
       setError('Hubo un error al registrar al usuario');
       console.log('Error al registrar el usuario');

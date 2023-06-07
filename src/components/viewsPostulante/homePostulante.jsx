@@ -196,12 +196,17 @@ const handleInputChange = (key, value) => {
         </Col>
       </Row>
       
-      <iframe
-        src="https://firebasestorage.googleapis.com/v0/b/top-services-gt.appspot.com/o/cv%2FTarea%206.pdf?alt=media&token=76ce8115-c5bd-4fb3-95fc-599557aeadf4" // Aquí debes pasar la URL del documento almacenado en Firebase Storage
-        title="Visualización de documento"
-        width="100%"
-        height="600px"
-      ></iframe>
+      <Row>
+        <Col className="d-flex justify-content-end mt-4">
+          <iframe
+            src={datosPostulante.cv}
+            title="Visualización de documento"
+            width="70%"
+            height="600px"
+            className="border border-secondary"
+          ></iframe>
+        </Col>
+      </Row>
   
       <Button variant="primary" onClick={handleCerrarSesion}>
         Cerrar Sesión
