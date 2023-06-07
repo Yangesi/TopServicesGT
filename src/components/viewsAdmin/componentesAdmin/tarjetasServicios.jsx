@@ -37,6 +37,7 @@ export const TarjetasServicios = () => {
 //radio button seleccionados
   const [seleccionEmpleador, setSeleccionEmpleador] = useState(0);
   const [seleccionPostulante, setSeleccionPostulante] = useState(0);
+  const [seleccionCv, setSeleccionCv] = useState('')
 
 
   useEffect(() => {
@@ -160,16 +161,32 @@ export const TarjetasServicios = () => {
   //console.log("cod_servicio",servicioSeleccionado2)
   // console.log("servicio empleador no",serviciosEmpleadorNo)
   //console.log("Empleador true", serviciosEmpleadorSi)
+  //console.log("cv seleccionado",seleccionCv)
 
   return (
     <>
     <Row>
-            <Col>
-            <Card style={{maxHeight: '400px', overflowY: 'auto' }} className="mx-auto">
-        <Card.Body>
-          <Card.Title>Empleadores filtrados</Card.Title>
-          <Row>
-          <Row>
+    <Col xs={12} md={8}>
+    <iframe
+  src={seleccionCv}
+  title="Visualización de documento"
+  width="100%"
+  height="600px"
+  className="border border-secondary"
+  style={{ margin: '10px' }}
+></iframe>
+
+    </Col>
+              
+              
+    
+    <Col xs={12} md={4}>
+
+    <Card style={{maxHeight: '600px', overflowY: 'auto' }} className="mx-auto">
+              <Card.Body>
+              <Card.Title>Empleadores filtrados</Card.Title>
+    
+    
             
               <Form.Select
                 value={tipoSeleccionado}
@@ -198,9 +215,6 @@ export const TarjetasServicios = () => {
                 </Form.Select>
 
               )}
-              
-              </Row>
-            <Col xs={12} md={6}>
           <Card.Subtitle>Empleadores sin postulantes</Card.Subtitle>
           <ListGroup as="ol" numbered>
             {serviciosEmpleadorNo.map((servicio, index) => (
@@ -224,8 +238,11 @@ export const TarjetasServicios = () => {
               </ListGroup.Item>
             ))}
           </ListGroup>
-          </Col>
-          <Col xs={12} md={6}>
+    
+          
+
+          
+          
           <Card.Subtitle>Postulantes disponibles</Card.Subtitle>
           <ListGroup as="ol" numbered>
             {serviciosPostulante.map((servicio, index) => (
@@ -244,13 +261,17 @@ export const TarjetasServicios = () => {
                   type="radio"
                   name="postulante"
                   value={servicio.id}
-                  onChange={(e) => setSeleccionPostulante(e.target.value)}
+                  onChange={(e) => 
+                  {
+                  const selectedCV = servicio.cv;
+                  setSeleccionPostulante(e.target.value);                 
+                  setSeleccionCv(selectedCV);
+                  }
+                  }
                 />
               </ListGroup.Item>
             ))}
           </ListGroup>
-          </Col>
-          <Col xs={12} md={6}>
           <Card.Subtitle>Empleadores con postulantes asignados</Card.Subtitle>
           <ListGroup as="ol" numbered>
             {serviciosEmpleadorSi.map((servicio, index) => (
@@ -289,13 +310,13 @@ export const TarjetasServicios = () => {
         <Button variant="primary" onClick={handleAsignarClick}>
           Asignar
         </Button>
-        </Col>
-        </Row>
-      </Card.Body>
-    </Card>
-    </Col>
-    </Row>
+        
     
+        </Card.Body>
+        </Card>
+        </Col>
+    
+    </Row>
   </>
 );
               }  

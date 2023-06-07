@@ -79,7 +79,7 @@ export const HomeAdmin = () => {
 
   return (
     <>
-      <div>Hola Admin</div>
+      <div><h1>Administrador</h1></div>
       <div style={{ overflowX: 'hidden' }}>
         <TarjetasServicios></TarjetasServicios>
         <EditarServicio></EditarServicio>
