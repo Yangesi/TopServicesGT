@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
+import logoP from '../../../logo/logoP.jpg'
 
 
 import { getServiciosEmpleadorNoRealizado, actualizarServicioEmpleador, getServiciosEmpleadorPorCodigoServicio } from '../../../../helpers/servicioEmpleador'
@@ -165,24 +166,33 @@ export const TarjetasServicios = () => {
 
   return (
     <>
-    <Row>
-    <Col xs={12} md={8}>
-    <iframe
-  src={seleccionCv}
-  title="Visualización de documento"
-  width="100%"
-  height="600px"
-  className="border border-secondary"
-  style={{ margin: '10px' }}
-></iframe>
+    <Row style={{ margin: '10px' }}>
+  <Col xs={11} md={8} className="mx-auto rounded-2 d-flex align-items-stretch" style={{ backgroundColor: '#f6f6f6' }}>
+    <div style={{ overflowX: 'auto', width: '100%' }}>
+      {seleccionCv ? (
+        <iframe
+          src={seleccionCv}
+          title="Visualización de documento"
+          width="100%"
+          height="600px"
+          className="border border-secondary"
+          style={{ margin: '10px' }}
+        ></iframe>
+      ) : (
+        <div style={{ textAlign: 'center', marginTop: '10px' }}>
+          <h5>CV no disponible</h5>
+          <img src={logoP} width="100px" alt="Logo" />
+        </div>
+      )}
+    </div>
+  </Col>
 
-    </Col>
               
               
     
-    <Col xs={12} md={4}>
+    <Col xs={11} md={4} className="mx-auto rounded-2 d-flex align-items-stretch" style={{ backgroundColor: '#f6f6f6' }}>
 
-    <Card style={{maxHeight: '600px', overflowY: 'auto' }} className="mx-auto">
+    <Card style={{maxHeight: '600px', overflowY: 'auto', width: '90%' }} className=" mx-auto mt-4">
               <Card.Body>
               <Card.Title>Empleadores filtrados</Card.Title>
     
@@ -215,7 +225,7 @@ export const TarjetasServicios = () => {
                 </Form.Select>
 
               )}
-          <Card.Subtitle>Empleadores sin postulantes</Card.Subtitle>
+              <Card.Subtitle className="mt-4 mb-2">Empleadores sin postulantes</Card.Subtitle>
           <ListGroup as="ol" numbered>
             {serviciosEmpleadorNo.map((servicio, index) => (
               <ListGroup.Item
@@ -243,7 +253,7 @@ export const TarjetasServicios = () => {
 
           
           
-          <Card.Subtitle>Postulantes disponibles</Card.Subtitle>
+          <Card.Subtitle className="mt-4 mb-2">Postulantes disponibles</Card.Subtitle>
           <ListGroup as="ol" numbered>
             {serviciosPostulante.map((servicio, index) => (
               <ListGroup.Item
@@ -272,7 +282,7 @@ export const TarjetasServicios = () => {
               </ListGroup.Item>
             ))}
           </ListGroup>
-          <Card.Subtitle>Empleadores con postulantes asignados</Card.Subtitle>
+          <Card.Subtitle className="mt-4 mb-2">Empleadores con postulantes asignados</Card.Subtitle>
           <ListGroup as="ol" numbered>
             {serviciosEmpleadorSi.map((servicio, index) => (
               <ListGroup.Item 
@@ -307,9 +317,12 @@ export const TarjetasServicios = () => {
           ))}
         </ListGroup>
         
-        <Button variant="primary" onClick={handleAsignarClick}>
-          Asignar
-        </Button>
+        <div className="d-flex justify-content-center mt-4">
+          <Button variant="primary" onClick={handleAsignarClick}>
+            Asignar
+          </Button>
+        </div>
+
         
     
         </Card.Body>

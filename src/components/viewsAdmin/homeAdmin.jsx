@@ -15,7 +15,9 @@ import { useNavigate } from "react-router-dom";
 //react bootstrap
 import { Button } from 'react-bootstrap';
 
-
+//mensaje de bienvenida
+import { Saludo } from '../msjBienvenida'
+import { Piedepagina } from '.././viewsHome/piedepagina'
 
 export const HomeAdmin = () => {
 
@@ -63,13 +65,6 @@ export const HomeAdmin = () => {
     
   }, [token]);
 
-  //function para cerrar sesion
-  const handleCerrarSesion = () => {
-    // Eliminar el token estableciéndolo como una cadena vacía o null
-    setToken('');
-  
-  };
-
   
 
   //console.log(listaEmpleadores)
@@ -79,14 +74,14 @@ export const HomeAdmin = () => {
 
   return (
     <>
-      <div><h1>Administrador</h1></div>
+      <Saludo msj=", Administrador"></Saludo>
+      
       <div style={{ overflowX: 'hidden' }}>
         <TarjetasServicios></TarjetasServicios>
         <EditarServicio></EditarServicio>
       </div>
-      <Button variant="primary" onClick={handleCerrarSesion}>
-        Cerrar Sesión
-      </Button>
+
+      <Piedepagina></Piedepagina>
     </>
   );
   }  

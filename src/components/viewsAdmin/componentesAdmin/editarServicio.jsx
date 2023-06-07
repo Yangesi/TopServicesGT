@@ -52,12 +52,11 @@ export const EditarServicio = () => {
 
   
 return (
-  <Row>
-    <Col>
-      <Card style={{maxHeight: '400px', overflowY: 'auto' }} className="mx-auto">
+
+      <Card style={{maxHeight: '400px', overflowY: 'auto', backgroundColor: '#f6f6f6' }} className="mt-4 mx-4">
         <Card.Body>
           <Row>
-            <Col xs={12} md={6}>
+            <Col xs={12} md={7}>
               <Card.Title>Editar Servicio</Card.Title>
 
               <ListGroup variant="flush">
@@ -82,7 +81,7 @@ return (
                 ))}
               </ListGroup>
             </Col>
-            <Col xs={12} md={6}>
+            <Col xs={12} md={5}>
               <Form>
                 <Form.Group controlId="codigoTipoServicio">
                   <Form.Label>Tipo de Servicio</Form.Label>
@@ -105,15 +104,17 @@ return (
                   />
                 </Form.Group>
 
-                <Button variant="primary" onClick={handleGuardarCambios}>
-                  Guardar cambios
-                </Button>
+                <div className="d-flex justify-content-end mt-4">
+                  <Button variant="primary" onClick={handleGuardarCambios}>
+                    Guardar cambios
+                  </Button>
+                </div>
+
               </Form>
             </Col>
           </Row>
         </Card.Body>
       </Card>
-    </Col>
-  </Row>
+
 );
 }
