@@ -14,6 +14,7 @@ import { getServiciosPostulantesPorCodigoServicio, actualizarServicioPostulante 
 //contexto
 import { TokenContext } from '../../../../src/components/context/contexto';
 import { useContext } from 'react';
+import { Row, Col } from 'react-bootstrap';
 
 export const TarjetasServicios = () => {
 
@@ -162,125 +163,141 @@ export const TarjetasServicios = () => {
 
   return (
     <>
-      {/* Tarjeta 1 */}
-      <Card style={{ width: '18rem' }}>
-        <Card.Img variant="top" src="holder.js/100px180" />
+    <Row>
+            <Col>
+            <Card style={{maxHeight: '400px', overflowY: 'auto' }} className="mx-auto">
         <Card.Body>
           <Card.Title>Empleadores filtrados</Card.Title>
-          <Card.Text>
+          <Row>
+          <Row>
             
-            {/* Primer select */}
-      <Form.Select
-        value={tipoSeleccionado}
-        onChange={e => setTipoSeleccionado(e.target.value)}
-      >
-        <option value="">Seleccionar tipo de servicio</option>
-        <option value="1">Tipo 1</option>
-        <option value="2">Tipo 2</option>
-      </Form.Select>
+              <Form.Select
+                value={tipoSeleccionado}
+                onChange={e => setTipoSeleccionado(e.target.value)}
+                style={{ width: '200px' }}
+              >
+                <option value="">Seleccionar tipo de servicio</option>
+                <option value="1">Tipo 1</option>
+                <option value="2">Tipo 2</option>
+              </Form.Select>
+              
 
-      {/* Segundo select */}
-      {tipoSeleccionado && (
-        <Form.Select value={codigoServicioSeleccionado} onChange={handleServicioChange}>
-          <option value="">Seleccionar servicio</option>
-          {serviciosFiltrados.map(servicio => (
-            <option key={servicio.id} value={servicio.cod_servicio}>
-              {servicio.nombre}
-            </option>
+            
+              {tipoSeleccionado && (
+                <Form.Select
+                  value={codigoServicioSeleccionado}
+                  onChange={handleServicioChange}
+                  style={{ width: '200px' }} // Ajusta el valor '200px' al ancho deseado
+                >
+                  <option value="">Seleccionar servicio</option>
+                  {serviciosFiltrados.map(servicio => (
+                    <option key={servicio.id} value={servicio.cod_servicio}>
+                      {servicio.nombre}
+                    </option>
+                  ))}
+                </Form.Select>
+
+              )}
+              
+              </Row>
+            <Col xs={12} md={6}>
+          <Card.Subtitle>Empleadores sin postulantes</Card.Subtitle>
+          <ListGroup as="ol" numbered>
+            {serviciosEmpleadorNo.map((servicio, index) => (
+              <ListGroup.Item
+                key={index}
+                as="li"
+                className="d-flex justify-content-between align-items-start"
+              >
+                <div className="ms-2 me-auto">
+                  <div className="fw-bold">
+                    {servicio.nombre} {servicio.apellido}
+                  </div>
+                  Tel: {servicio.tel}
+                </div>
+                <Form.Check
+                  type="radio"
+                  name="empleador"
+                  value={servicio.id}
+                  onChange={(e) => setSeleccionEmpleador(e.target.value)}
+                />
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+          </Col>
+          <Col xs={12} md={6}>
+          <Card.Subtitle>Postulantes disponibles</Card.Subtitle>
+          <ListGroup as="ol" numbered>
+            {serviciosPostulante.map((servicio, index) => (
+              <ListGroup.Item
+                key={index}
+                as="li"
+                className="d-flex justify-content-between align-items-start"
+              >
+                <div className="ms-2 me-auto">
+                  <div className="fw-bold">
+                    {servicio.nombre} {servicio.apellido}
+                  </div>
+                  <div>Pretension salarial: {servicio.pretencion_salarial}</div>
+                </div>
+                <Form.Check
+                  type="radio"
+                  name="postulante"
+                  value={servicio.id}
+                  onChange={(e) => setSeleccionPostulante(e.target.value)}
+                />
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+          </Col>
+          <Col xs={12} md={6}>
+          <Card.Subtitle>Empleadores con postulantes asignados</Card.Subtitle>
+          <ListGroup as="ol" numbered>
+            {serviciosEmpleadorSi.map((servicio, index) => (
+              <ListGroup.Item 
+                key={index}
+                as="li"
+                className="d-flex justify-content-between align-items-start"
+              >
+                <div className="ms-2 me-auto">
+                  <div className="fw-bold">
+                    {servicio.nom_empleador} {servicio.ap_empleador}
+                  </div>
+                  <div>{servicio.razon_social}</div>
+                  <div>{servicio.tel_empleador}</div>
+                  <div className="fw-bold">
+                    {servicio.nombre} {servicio.apellido}
+                  </div>
+                  <div>{servicio.tel}</div>
+                  {(() => {
+                    
+                    const fecha = new Date(servicio.fecha_realizado);
+                  const fechaLegible =
+                    fecha.toLocaleDateString('es-ES') +
+                    ' ' +
+                    fecha.toLocaleTimeString('es-ES');
+                  return <div>{fechaLegible}</div>;
+                })()}
+              </div>
+              <Button variant="danger" onClick={() => handleEliminarServicio(index)}>
+                Eliminar
+              </Button>
+            </ListGroup.Item>
           ))}
-        </Form.Select>
-      )}
-    <Card.Subtitle>Empleadores en false</Card.Subtitle>
-    <ListGroup as="ol" numbered>
-  {serviciosEmpleadorNo.map((servicio, index) => (
-    <ListGroup.Item
-      key={index}
-      as="li"
-      className="d-flex justify-content-between align-items-start"
-    >
-      <div className="ms-2 me-auto">
-        <div className="fw-bold">
-          {servicio.nombre} {servicio.apellido}
-        </div>
-        Tel: {servicio.tel}
-      </div>
-      <Form.Check
-        type="radio"
-        name="empleador"
-        value={servicio.id}
-        onChange={(e) => setSeleccionEmpleador(e.target.value)}
-      />
-    </ListGroup.Item>
-  ))}
-</ListGroup>
-<Card.Subtitle>Postulantes</Card.Subtitle>
-<ListGroup as="ol" numbered>
-  {serviciosPostulante.map((servicio, index) => (
-    <ListGroup.Item
-      key={index}
-      as="li"
-      className="d-flex justify-content-between align-items-start"
-    >
-      <div className="ms-2 me-auto">
-        <div className="fw-bold">
-          {servicio.nombre} {servicio.apellido}
-        </div>
-        <div>Pretension salarial: {servicio.pretencion_salarial}</div>
-      </div>
-      <Form.Check
-        type="radio"
-        name="postulante"
-        value={servicio.id}
-        onChange={(e) => setSeleccionPostulante(e.target.value)}
-      />
-    </ListGroup.Item>
-  ))}
-</ListGroup>
-
-<Card.Subtitle>Empleadores en true</Card.Subtitle>
-<ListGroup as="ol" numbered>
-  {serviciosEmpleadorSi.map((servicio, index) => (
-    <ListGroup.Item
-      key={index}
-      as="li"
-      className="d-flex justify-content-between align-items-start"
-    >
-      <div className="ms-2 me-auto">
-        <div className="fw-bold">
-          {servicio.nom_empleador} {servicio.ap_empleador}
-        </div>
-        <div>{servicio.razon_social}</div>
-        <div>{servicio.tel_empleador}</div>
-        <div className="fw-bold">
-          {servicio.nombre} {servicio.apellido}
-        </div>
-        <div>{servicio.tel}</div>
-        {(() => {
-          const fecha = new Date(servicio.fecha_realizado);
-          const fechaLegible =
-            fecha.toLocaleDateString('es-ES') +
-            ' ' +
-            fecha.toLocaleTimeString('es-ES');
-          return <div>{fechaLegible}</div>;
-        })()}
-      </div>
-      <Button variant="danger" onClick={() => handleEliminarServicio(index)}>
-        Eliminar
-      </Button>
-    </ListGroup.Item>
-  ))}
-</ListGroup>
-
- 
-          </Card.Text>
-          <Button variant="primary" onClick={handleAsignarClick}>
-            Asignar
-          </Button>
-
-        </Card.Body>
-      </Card>
-    </>
-  );
-};
+        </ListGroup>
+        
+        <Button variant="primary" onClick={handleAsignarClick}>
+          Asignar
+        </Button>
+        </Col>
+        </Row>
+      </Card.Body>
+    </Card>
+    </Col>
+    </Row>
+    
+  </>
+);
+              }  
 
 

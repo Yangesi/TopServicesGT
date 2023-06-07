@@ -80,11 +80,13 @@ export const HomeAdmin = () => {
   return (
     <>
       <div>Hola Admin</div>
-      <TarjetasServicios></TarjetasServicios>
-      <EditarServicio></EditarServicio>
+      <div style={{ overflowX: 'hidden' }}>
+        <TarjetasServicios></TarjetasServicios>
+        <EditarServicio></EditarServicio>
+      </div>
       <Button variant="primary" onClick={handleCerrarSesion}>
         Cerrar Sesión
       </Button>
-    </> 
-  )
-}
+    </>
+  );
+  }  

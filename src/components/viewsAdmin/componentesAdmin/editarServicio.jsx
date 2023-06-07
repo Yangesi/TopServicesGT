@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ListGroup, Button, Form } from 'react-bootstrap';
+import { ListGroup, Button, Form, Card, Row, Col } from 'react-bootstrap';
 import { getServicios } from '../../../../helpers/getServicios'
 import { actualizarServicio } from '../../../../helpers/servicio'
 
@@ -50,47 +50,70 @@ export const EditarServicio = () => {
     console.log(data)
   };
 
-  return (
-    <>
-      <div>Editar Servicio</div>
+  
+return (
+  <Row>
+    <Col>
+      <Card style={{maxHeight: '400px', overflowY: 'auto' }} className="mx-auto">
+        <Card.Body>
+          <Row>
+            <Col xs={12} md={6}>
+              <Card.Title>Editar Servicio</Card.Title>
 
-      <ListGroup variant="flush">
-        {servicios.map((servicio) => (
-          <ListGroup.Item key={servicio.codigo}>
-            <div className="d-flex justify-content-between align-items-center">
-              <span>{servicio.nombre}</span>
-              <Button
-                variant="primary"
-                onClick={() => handleEditarServicio(servicio.cod_servicio, servicio.cod_tipo, servicio.nombre)}
-              >
-                Editar
-              </Button>
-            </div>
-          </ListGroup.Item>
-        ))}
-      </ListGroup>
+              <ListGroup variant="flush">
+                {servicios.map((servicio) => (
+                  <ListGroup.Item key={servicio.codigo}>
+                    <div className="d-flex justify-content-between align-items-center">
+                      <span>{servicio.nombre}</span>
+                      <Button
+                        variant="primary"
+                        onClick={() =>
+                          handleEditarServicio(
+                            servicio.cod_servicio,
+                            servicio.cod_tipo,
+                            servicio.nombre
+                          )
+                        }
+                      >
+                        Editar
+                      </Button>
+                    </div>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            </Col>
+            <Col xs={12} md={6}>
+              <Form>
+                <Form.Group controlId="codigoTipoServicio">
+                  <Form.Label>Tipo de Servicio</Form.Label>
+                  <Form.Control
+                    as="select"
+                    value={codigoTipoServicio}
+                    onChange={(e) => setCodigoTipoServicio(e.target.value)}
+                  >
+                    <option value="1">Tipo 1</option>
+                    <option value="2">Tipo 2</option>
+                  </Form.Control>
+                </Form.Group>
 
-      <Form>
-        <Form.Group controlId="codigoTipoServicio">
-          <Form.Label>Tipo de Servicio</Form.Label>
-          <Form.Control as="select" value={codigoTipoServicio} onChange={(e) => setCodigoTipoServicio(e.target.value)}>
-            <option value="1">Tipo 1</option>
-            <option value="2">Tipo 2</option>
-          </Form.Control>
-        </Form.Group>
+                <Form.Group controlId="nombre">
+                  <Form.Label>Nombre</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={nombre}
+                    onChange={(e) => setNombre(e.target.value)}
+                  />
+                </Form.Group>
 
-        <Form.Group controlId="nombre">
-          <Form.Label>Nombre</Form.Label>
-          <Form.Control type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} />
-        </Form.Group>
-
-        <Button variant="primary" onClick={handleGuardarCambios}>
-          Guardar cambios
-        </Button>
-      </Form>
-
-    </>
-  );
-};
-
-
+                <Button variant="primary" onClick={handleGuardarCambios}>
+                  Guardar cambios
+                </Button>
+              </Form>
+            </Col>
+          </Row>
+        </Card.Body>
+      </Card>
+    </Col>
+  </Row>
+);
+}
