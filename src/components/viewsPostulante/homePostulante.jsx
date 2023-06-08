@@ -7,6 +7,9 @@ import { actualizarPostulante } from '../../../helpers/postulante'
 import { AgregarServicioPostulante } from './componentesPostulante/agregarServicioPostulante'
 import { useNavigate, Link } from "react-router-dom";
 
+//mensaje de bienvenida
+import { Saludo } from '../msjBienvenida'
+import { Piedepagina } from '.././viewsHome/piedepagina'
 
 //react bootstrap
 import { ListGroup, Button, Card, Col, Row } from 'react-bootstrap';
@@ -50,13 +53,6 @@ export const HomePostulante = () => {
       
     }
   }, [token, cod_usuario]);
-
-  //function para cerrar sesion
-  const handleCerrarSesion = () => {
-    // Eliminar el token estableciéndolo como una cadena vacía o null
-    setToken('');
-  
-  };
   
   useEffect(() => {
     if (codigo && token) {
@@ -98,30 +94,45 @@ const handleInputChange = (key, value) => {
     [key]: value,
   }));
 };
+
+//tomar solo el primer nombre del postulante
+const nombreCompleto = datosPostulante.nombre;
+const primerNombre = nombreCompleto.split(" ")[0];
+
+//objeto para imprimir los valores adecuados en los input de los datos personales
+const nombresPersonalizados = {
+  apellido: "Apellido",
+  nombre: "Nombre",
+  tel: "Teléfono",
+  cv: "CV",
+  pretencion_salarial: "Pretensión Salarial",
+  comentario: "Comentario",
+};
   
 
 
   //console.log('datos del postulante',datosPostulante)
   //console.log('datos de los servicios',datosServicios)
-  console.log('cv', datosPostulante.cv)
+  //console.log('cv', datosPostulante.cv)
 
   return (
     <>
-      <h1>Postulante</h1>
-      <Row>
-        <Col>
-          <Card style={{ width: '70rem' }} className="mx-auto">
+    <div style={{ overflowX: 'hidden' }}>
+      <Saludo msj={", " + primerNombre} />
+      <Row style={{ margin: '10px' }}>
+        <Col xs={12} md={12}>
+          <Card className="mx-auto mt-4">
             <Card.Header></Card.Header>
             <Card.Body>
               <Row>
-                <Col>
+                <Col xs={12} md={6}>
                   <Card.Title className="text-center">Datos personales</Card.Title>
                   <ListGroup>
                     {Object.keys(datosPostulante).map((key, index) => {
                       if (["apellido", "nombre", "tel", "cv", "pretencion_salarial", "comentario"].includes(key)) {
                         return (
-                          <ListGroup.Item key={index}>
-                            <span>{key}: </span>
+                          <ListGroup.Item key={index} className="d-flex flex-column">
+                            <span>{nombresPersonalizados[key]} </span>
                             <input
                               type="text"
                               value={datosPostulante[key]}
@@ -131,9 +142,11 @@ const handleInputChange = (key, value) => {
                           </ListGroup.Item>
                         );
                       }
-                      return null; // Omitir otras claves del objeto
+                      return null;
                     })}
                   </ListGroup>
+
+          
                   <Button
                     variant="primary"
                     size="sm"
@@ -156,7 +169,7 @@ const handleInputChange = (key, value) => {
                       <Link to="/cambiar-clave">Cambiar contraseña</Link>
                   </div>
                 </Col>
-                <Col>
+                <Col xs={12} md={6}>
                   <Card.Title className="text-center">Servicios</Card.Title>
                   <ListGroup>
                     {datosServicios.map((servicio, index) => (
@@ -197,20 +210,25 @@ const handleInputChange = (key, value) => {
       </Row>
       
       <Row>
-        <Col className="d-flex justify-content-end mt-4">
-          <iframe
-            src={datosPostulante.cv}
-            title="Visualización de documento"
-            width="70%"
-            height="600px"
-            className="border border-secondary"
-          ></iframe>
-        </Col>
+      <Col xs={12} md={12} className="d-flex justify-content-center mt-4">
+  {datosPostulante.cv ? (
+    <iframe
+      src={datosPostulante.cv}
+      title="Visualización de documento"
+      width="70%"
+      height="600px"
+      className="border border-secondary"
+    ></iframe>
+  ) : (
+    <div style={{ textAlign: 'center' }}>
+      <h5>CV no disponible</h5>
+    </div>
+  )}
+</Col>
+
       </Row>
-  
-      <Button variant="primary" onClick={handleCerrarSesion}>
-        Cerrar Sesión
-      </Button>
+      <Piedepagina></Piedepagina>
+      </div>
     </>
   );
 }    

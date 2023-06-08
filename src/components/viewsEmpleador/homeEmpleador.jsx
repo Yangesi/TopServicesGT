@@ -10,7 +10,11 @@ import { useContext } from 'react';
 import { ListGroup, Button, Card, Col, Row } from 'react-bootstrap';
 
 //navigate
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+
+//mensaje de bienvenida
+import { Saludo } from '../msjBienvenida'
+import { Piedepagina } from '.././viewsHome/piedepagina'
 
 
 export const HomeEmpleador = () => {
@@ -99,22 +103,36 @@ export const HomeEmpleador = () => {
     //console.log(datosServicios)
     console.log(token)
 
+    //tomar solo el primer nombre del empleador
+const nombreCompleto = datosEmpleador.nombre;
+const primerNombre = nombreCompleto.split(" ")[0];
+
+//objeto para imprimir los valores adecuados en los input de los datos personales
+const nombresPersonalizados = {
+  apellido: "Apellido",
+  nombre: "Nombre",
+  tel: "Teléfono",
+  razon_social: "Razón social",
+};
+
     return (
       <>
-        <Row>
-          <Col>
-            <Card style={{ width: '70rem' }} className="mx-auto">
+      <div style={{ overflowX: 'hidden' }}>
+      <Saludo msj={", " + primerNombre} />
+        <Row style={{ margin: '10px' }}>
+          <Col xs={12} md={12}>
+            <Card className="mx-auto mt-4">
               <Card.Header></Card.Header>
               <Card.Body>
                 <Row>
-                  <Col>
+                  <Col xs={12} md={6}>
                     <Card.Title className="text-center">Datos personales</Card.Title>
                     <ListGroup>
                       {Object.keys(datosEmpleador).map((key, index) => {
                         if (["apellido", "nombre", "tel", "razon_social"].includes(key)) {
                           return (
-                            <ListGroup.Item key={index}>
-                              <span>{key}: </span>
+                            <ListGroup.Item key={index} className="d-flex flex-column">
+                              <span>{nombresPersonalizados[key]} </span>
                               <input
                                 type="text"
                                 value={datosEmpleador[key]}
@@ -145,10 +163,13 @@ export const HomeEmpleador = () => {
                     >
                       Guardar Cambios
                     </Button>
+                    <div className="d-flex justify-content-center mt-3">
+                      <Link to="/cambiar-clave">Cambiar contraseña</Link>
+                  </div>
 
           </Col>
     
-          <Col>
+          <Col xs={12} md={6}>
             <Card.Title className="text-center">Servicios</Card.Title>
             <ListGroup>
               {datosServicios.map((servicio, index) => (
@@ -188,9 +209,8 @@ export const HomeEmpleador = () => {
           </Col>
         </Row>
     
-        <Button variant="primary" onClick={handleCerrarSesion}>
-          Cerrar Sesión
-        </Button>
+        <Piedepagina></Piedepagina>
+        </div>
       </>
     );
                 }    
