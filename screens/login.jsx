@@ -6,12 +6,14 @@ import { useContext } from 'react';
 import { iniciarSesion } from '../helpers/usuario'
 import { useNavigate, Link } from "react-router-dom";
 
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Alert } from "react-bootstrap";
+import { Piedepagina } from '../src/components/viewsHome/piedepagina'
 
 export const Login = () => {  
 
   const [correo, setCorreo] = useState('');
   const [clave, setClave] = useState('');
+  const [error, setError] = useState('');
 
   const handleEmailChange = (event) => {
     setCorreo(event.target.value);
@@ -33,7 +35,9 @@ export const Login = () => {
       correo,
       clave
     };
-  
+
+    
+  try{
     const respuestaUsuario = await iniciarSesion(usuario);
 
     const datoToken = respuestaUsuario.token;
@@ -62,10 +66,17 @@ export const Login = () => {
         break;
     }
     navigate(redirect);
- // muestra el valor del campo codigo_rol del token
+ // en el catch capturamos el error y se establece en el estado error y se lanza un alert
+}catch (error) {
+  if (error.response && error.response.data) {
+    const mensajeError = error.response.data.error;
+    setError(mensajeError);
+  } else {
+    setError('Error al iniciar sesión. Por favor, intenta nuevamente.');
   }
+}
 
-  
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -75,13 +86,19 @@ export const Login = () => {
   }
 
   return (
+    <>
     <Container fluid className="h-100 w-100">
       <Row>
-        <Card style={{ width: '18rem', marginTop: '100px' }} className="mx-auto">
+        <Card style={{ width: '20rem', marginTop: '100px' }} className="mx-auto">
           <Card.Header></Card.Header>
           <Card.Body>
             <Card.Title className="text-center">Inicia sesión</Card.Title>
             <Card.Text>
+            {error && (
+                <Alert variant="danger" className="mt-3">
+                  {error}
+                </Alert>
+              )}
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="Correo">
                   <Form.Label>Correo</Form.Label>
@@ -101,6 +118,7 @@ export const Login = () => {
                     value={clave}
                     onChange={handlePasswordChange}
                     name="password"
+                    required
                   />
                 </Form.Group>
                 <div className="d-flex justify-content-center">
@@ -118,6 +136,8 @@ export const Login = () => {
         </Card>
       </Row>
     </Container>
+    <Piedepagina></Piedepagina>
+    </>
   );
 }
 
