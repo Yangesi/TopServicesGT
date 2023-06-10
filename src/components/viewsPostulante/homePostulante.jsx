@@ -12,7 +12,8 @@ import { Saludo } from '../msjBienvenida'
 import { Piedepagina } from '.././viewsHome/piedepagina'
 
 //react bootstrap
-import { ListGroup, Button, Card, Col, Row } from 'react-bootstrap';
+import { ListGroup, Button, Card, Col, Row, Alert } from 'react-bootstrap';
+import logoP from '../../../src/logo/logoP.jpg'
 
 export const HomePostulante = () => {
 
@@ -29,6 +30,13 @@ export const HomePostulante = () => {
   });
   const [datosServicios, setDatosServicios] = useState([]);
   const { token, setToken, cod_usuario, setCodigo, codigo } = useContext(TokenContext);
+
+  //manejador de error y realizado
+  const [error, setError] = useState('');
+  const [realizado, setRealizado] = useState('');
+
+//contador de clicks para actualizar los useffect
+const [asignarClickCount, setAsignarClickCount] = useState(0);
 
   useEffect(() => {
     if (token) {
@@ -52,7 +60,7 @@ export const HomePostulante = () => {
       navigate(redirect);
       
     }
-  }, [token, cod_usuario]);
+  }, [token, cod_usuario, asignarClickCount]);
   
   useEffect(() => {
     if (codigo && token) {
@@ -73,6 +81,8 @@ const handleEditar = () => {
 
 const handleGuardarCambios = async() => {
   setEditando(false);
+
+  try{
   // Aquí puedes realizar la lógica para guardar los cambios en el backend
   const nuevoPostulante = {
     apellido: datosPostulante.apellido,
@@ -83,9 +93,21 @@ const handleGuardarCambios = async() => {
     comentario: datosPostulante.comentario
   }
   //console.log("datosPostulante",nuevoPostulante)
-  console.log(codigo)
+  //console.log(codigo)
   const data = await actualizarPostulante(codigo, nuevoPostulante, token)
-  console.log("respuesta",data)
+  //console.log("respuesta",data)
+  setRealizado('Cambios realizados');
+  setAsignarClickCount(asignarClickCount + 1);
+  setError(null);
+  }catch(error)
+  {
+    if (error.response && error.response.data) {
+      const mensajeError = error.response.data.error;
+      setError(mensajeError);
+    } else {
+      setError('Error al guardar los cambios.');
+    }
+  }
 };
 
 const handleInputChange = (key, value) => {
@@ -126,6 +148,11 @@ const nombresPersonalizados = {
             <Card.Body>
               <Row>
                 <Col xs={12} md={6}>
+                {error && (
+                <Alert variant="danger" className="mt-3">
+                  {error}
+                </Alert>
+    )}
                   <Card.Title className="text-center">Datos personales</Card.Title>
                   <ListGroup>
                     {Object.keys(datosPostulante).map((key, index) => {
@@ -220,8 +247,9 @@ const nombresPersonalizados = {
       className="border border-secondary"
     ></iframe>
   ) : (
-    <div style={{ textAlign: 'center' }}>
-      <h5>CV no disponible</h5>
+    <div style={{ textAlign: 'center', marginTop: '10px' }}>
+      <h5>CV no disponible</h5>    
+      <img src={logoP} width="100px" alt="Logo" />                  
     </div>
   )}
 </Col>
