@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Container, Row, Col, ListGroup, Card, Button } from "react-bootstrap";
+import { Container, Row, Col, ListGroup, Card, Button, Image } from "react-bootstrap";
 
 //import { Postulante } from './forms/postulante'
 //import { Empleador } from './forms/empleador'
@@ -10,6 +10,11 @@ import { TercerFormulario } from './forms/partes_forms_empleador/part3'
 import { PrimerFormularioP } from './forms/partes_forms_postulante/part1'
 import { SegundoFormularioP } from './forms/partes_forms_postulante/part2'
 import { TercerFormularioP } from './forms/partes_forms_postulante/part3'
+
+import buscar_trabajo from '../src/logo/buscar_trabajo.jpg'
+import encuentra_trabajo from '../src/logo/encuentra_trabajo.jpg'
+
+import { Piedepagina } from '../src/components/viewsHome/piedepagina'
 
 export const Registrarse = () => {
 
@@ -49,7 +54,8 @@ export const Registrarse = () => {
     const handlePostulanteModalClose3 = () => setShowPostulanteModal3(false);
 
 
-  return (   
+  return ( 
+    <>  
     <div className="container mb-4 mt-5 bg-light p-4 rounded-3">
       <div className="jumbotron">
     <Container fluid className="h-100 w-100">
@@ -57,8 +63,8 @@ export const Registrarse = () => {
 
     <Col className=" rounded-5 d-flex align-items-stretch p-4" style={{ backgroundColor: '#cb5034' }}>
 
-    <Card style={{ width: '18rem' }} className="mx-auto">
-      <Card.Img variant="top" src="holder.js/100px180?text=Image cap" />
+    <Card style={{ width: '20rem' }} className="mx-auto">
+    <Image src={encuentra_trabajo} alt="Logo" width={350} height={350} className="img-fluid rounded-2 d-block" />
       <Card.Body>
         <Card.Title>¿Buscas trabajo?</Card.Title>
         <Card.Text>
@@ -74,7 +80,7 @@ export const Registrarse = () => {
         <Card.Body>
 
         <div className="d-flex justify-content-center">
-        <Button onClick={handlePostulanteModalShow}>Registrarme postulante</Button>
+        <Button onClick={handlePostulanteModalShow}>Registrarse</Button>
 
         <PrimerFormularioP show={showPostulanteModal} handleClose={handlePostulanteModalClose} form2={handlePostulanteModalShow2} />
         </div>
@@ -91,8 +97,8 @@ export const Registrarse = () => {
 
     <Col className=" rounded-5 d-flex align-items-stretch p-4 bg-warning">
 
-    <Card style={{ width: '18rem' }} className="mx-auto">
-      <Card.Img variant="top" src="holder.js/100px180?text=Image cap" />
+    <Card style={{ width: '20rem' }} className="mx-auto">
+    <Image src={buscar_trabajo} alt="Logo" width={350} height={350} className="img-fluid rounded-2 d-block" />
       <Card.Body>
         <Card.Title>¿Necesitas personal para tu empresa?</Card.Title>
         <Card.Text>
@@ -106,7 +112,7 @@ export const Registrarse = () => {
         <Card.Body>
 
         <div className="d-flex justify-content-center">
-        <Button onClick={handleEmpleadorModalShow}>Registrarme empleador</Button>
+        <Button onClick={handleEmpleadorModalShow}>Registrarse</Button>
 
         <PrimerFormulario show={showEmpleadorModal} handleClose={handleEmpleadorModalClose} form2={handleEmpleadorModalShow2} /> 
 
@@ -130,6 +136,7 @@ export const Registrarse = () => {
 </Container>
 </div>
 </div>
-
+<Piedepagina></Piedepagina>
+</>
   )
 }

@@ -10,12 +10,12 @@ import logoP from '../../../logo/logoP.jpg'
 
 
 import { getServiciosEmpleadorNoRealizado, actualizarServicioEmpleador, getServiciosEmpleadorPorCodigoServicio } from '../../../../helpers/servicioEmpleador'
-import { getServiciosPostulantesPorCodigoServicio, actualizarServicioPostulante } from '../../../../helpers/servicioPostulante'
+import { getServiciosPostulantesPorCodigoServicio, actualizarServicioPostulante} from '../../../../helpers/servicioPostulante'
 
 //contexto
 import { TokenContext } from '../../../../src/components/context/contexto';
 import { useContext } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Alert } from 'react-bootstrap';
 
 export const TarjetasServicios = () => {
 
@@ -40,6 +40,12 @@ export const TarjetasServicios = () => {
   const [seleccionPostulante, setSeleccionPostulante] = useState(0);
   const [seleccionCv, setSeleccionCv] = useState('')
 
+  //manejador de error y realizado
+  const [error, setError] = useState('');
+  const [realizado, setRealizado] = useState('');
+
+//contador de clicks para actualizar los useffect
+const [asignarClickCount, setAsignarClickCount] = useState(0);
 
   useEffect(() => {
     const obtenerServicios = async () => {
@@ -68,7 +74,7 @@ export const TarjetasServicios = () => {
       };
       obtenerServiciosEmpleadorNoRealizados();
   
-  }, [codigoServicioSeleccionado])
+  }, [codigoServicioSeleccionado, asignarClickCount])
 
   useEffect(() => {
     const obtenerServiciosEmpleadorRealizado = async () => {
@@ -77,7 +83,7 @@ export const TarjetasServicios = () => {
       };
       obtenerServiciosEmpleadorRealizado();
       console.log('si',serviciosEmpleadorSi)
-  }, [codigoServicioSeleccionado])
+  }, [codigoServicioSeleccionado, asignarClickCount])
   
   useEffect(() => {
 
@@ -87,13 +93,14 @@ export const TarjetasServicios = () => {
     };
     obtenerPostulantesPorCodigoServicio();    
 
-  }, [codigoServicioSeleccionado])
+  }, [codigoServicioSeleccionado, asignarClickCount ])
   
   const handleServicioChange = (e) => {
     setCodigoServicioSeleccionado(e.target.value);
   };
 
   const handleAsignarClick = async () => {
+    try{
     if (seleccionEmpleador && seleccionPostulante) {
       const fechaActual = new Date().toISOString().slice(0, 19).replace('T', ' ');
       const servicioEmpleador = {
@@ -102,7 +109,7 @@ export const TarjetasServicios = () => {
         id_servicio_postulante: seleccionPostulante
       };
 
-      //const data = await actualizarServicioEmpleador(seleccionEmpleador, servicioEmpleador, token);
+      const data = await actualizarServicioEmpleador(seleccionEmpleador, servicioEmpleador, token);
 
       const servicioPostulante = {
         realizado: 1, 
@@ -114,10 +121,25 @@ export const TarjetasServicios = () => {
       const data2 = await actualizarServicioPostulante(seleccionPostulante, servicioPostulante, token);
       
       //console.log('servicioPostulante',data2);
+      setAsignarClickCount(asignarClickCount + 1);
+      setRealizado('Asignación realizada');
+      setError(null);
+      setSeleccionEmpleador(null);
+      setSeleccionPostulante(null);
 
     } else {
-      console.log('error al selecionar los radio button')
+      setError('Debe selecionar un empleador y un postulante')
+      setRealizado(null);
     }
+  }catch(error)
+  {
+    if (error.response && error.response.data) {
+      const mensajeError = error.response.data.error;
+      setError(mensajeError);
+    } else {
+      setError('Error al realizar la asignación.');
+    }
+  }
   };
 
   const handleEliminarServicio = async(index) => {
@@ -145,6 +167,9 @@ export const TarjetasServicios = () => {
 
     const respuestaP = await actualizarServicioPostulante(idServicioPostulante, actualizarServicioP, token);
     const respuestaE = await actualizarServicioEmpleador(id, actualizarServicioE, token);
+
+    setAsignarClickCount(asignarClickCount + 1);
+    setRealizado('Eliminación realizada');
     
 
     console.log(respuestaE)
@@ -193,6 +218,16 @@ export const TarjetasServicios = () => {
     <Col xs={11} md={4} className="mx-auto rounded-2 d-flex align-items-stretch" style={{ backgroundColor: '#f6f6f6' }}>
 
     <Card style={{maxHeight: '600px', overflowY: 'auto', width: '90%' }} className=" mx-auto mt-4">
+    {error && (
+                <Alert variant="danger" className="mt-3">
+                  {error}
+                </Alert>
+    )}
+    {realizado && (
+                <Alert variant="success" className="mt-3">
+                  {realizado}
+                </Alert>
+    )}
               <Card.Body>
               <Card.Title>Empleadores filtrados</Card.Title>
     

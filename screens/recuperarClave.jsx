@@ -6,6 +6,9 @@ import { Piedepagina } from '../src/components/viewsHome/piedepagina'
 
 import { validarCorreo, validarPassword } from '../helpers/Validacion';
 
+//redireccionamiento
+import { useNavigate } from "react-router-dom";
+
 export const RecuperarClave = () => {
 
     const [correo, setCorreo] = useState("");
@@ -19,6 +22,9 @@ export const RecuperarClave = () => {
   const [errorCorreo, setErrorCorreo] = useState(true);
   const [errorClave, setErrorClave] = useState(true);
   const [error, setError] = useState('');
+
+  //hook navigate
+  const navigate = useNavigate();
 
     const handleEmailChange = (event) => {
       const value = event.target.value;
@@ -80,6 +86,8 @@ export const RecuperarClave = () => {
         try{
         const data = await cambiarContrasena(cambiarClavee);
         console.log(data);
+        let redirect = '/login';
+        navigate(redirect);
         }
         catch(error)
         {
@@ -161,7 +169,7 @@ export const RecuperarClave = () => {
                 />
               </Form.Group>
               <Form.Group controlId="formContrasena">
-                    <Form.Label>Contraseña</Form.Label>
+                    <Form.Label>Nueva contraseña</Form.Label>
                   <Form.Control
                     type="password"
                     value={nuevaClave}

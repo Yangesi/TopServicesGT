@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ListGroup, Button, Form, Card, Row, Col } from 'react-bootstrap';
+import { ListGroup, Button, Form, Card, Row, Col, Alert } from 'react-bootstrap';
 import { getServicios } from '../../../../helpers/getServicios'
 import { actualizarServicio } from '../../../../helpers/servicio'
 
@@ -16,6 +16,13 @@ export const EditarServicio = () => {
   //contexto
   const { token } = useContext(TokenContext);
 
+  //manejador de error y realizado
+  const [error, setError] = useState('');
+  const [realizado, setRealizado] = useState('');
+
+  //contador de clicks para actualizar los useffect
+const [asignarClickCount, setAsignarClickCount] = useState(0);
+
   useEffect(() => {
     const obtenerServicios = async () => {
       const data = await getServicios();
@@ -23,7 +30,7 @@ export const EditarServicio = () => {
     };
     obtenerServicios();
     //tengo que ejecutar este useeffect cada vez que se guarden cambios al editar un servicio
-  }, [codigoServicio]);
+  }, [codigoServicio, asignarClickCount]);
 
   console.log(servicios);
 
@@ -41,6 +48,7 @@ export const EditarServicio = () => {
     console.log('Código de tipo de servicio:', codigoTipoServicio);
     console.log('Nombre:', nombre);
 
+    try{
     const actualizarServicioo = {
         codigo_tipo_servicio: codigoTipoServicio,
         nombre
@@ -48,7 +56,22 @@ export const EditarServicio = () => {
 
     const data = await actualizarServicio(codigoServicio, actualizarServicioo, token)
     console.log(data)
+
+    setAsignarClickCount(asignarClickCount + 1);
+    setRealizado('Asignación realizada');
+    setError(null);
+
+  }catch(error)
+  {
+    if (error.response && error.response.data) {
+      const mensajeError = error.response.data.error;
+      setError(mensajeError);
+    } else {
+      setError('Error al editar el servicio.');
+    }
+  }
   };
+  
 
   
 return (
@@ -58,6 +81,11 @@ return (
           <Row>
             <Col xs={12} md={7}>
               <Card.Title>Editar Servicio</Card.Title>
+              {error && (
+                <Alert variant="danger" className="mt-3">
+                  {error}
+                </Alert>
+    )}
 
               <ListGroup variant="flush">
                 {servicios.map((servicio) => (
