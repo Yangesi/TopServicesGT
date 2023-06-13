@@ -11,8 +11,12 @@ import { useNavigate, Link } from "react-router-dom";
 import { Saludo } from '../msjBienvenida'
 import { Piedepagina } from '.././viewsHome/piedepagina'
 
+//firestore
+import { storage } from '../../../src/firebase/configFirebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+
 //react bootstrap
-import { ListGroup, Button, Card, Col, Row, Alert } from 'react-bootstrap';
+import { ListGroup, Button, Card, Col, Form, Row, Alert } from 'react-bootstrap';
 import logoP from '../../../src/logo/logoP.jpg'
 
 export const HomePostulante = () => {
@@ -28,6 +32,12 @@ export const HomePostulante = () => {
     pretencion_salarial: '',
     comentario: '',
   });
+
+  //carga del cv
+  const [cvCargado, setCvCargado] = useState('');
+  const [url_cv, setUrl_cv] = useState(null);
+  const [cvListo, setCvListo] = useState(false);
+
   const [datosServicios, setDatosServicios] = useState([]);
   const { token, setToken, cod_usuario, setCodigo, codigo } = useContext(TokenContext);
 
@@ -79,34 +89,69 @@ const handleEditar = () => {
   setEditando(true);
 };
 
-const handleGuardarCambios = async() => {
-  setEditando(false);
+const handleCargarCv = () => {
+  enviarCv();
+}
 
+const handleGuardarCambios = async() => {
+  
   try{
-  // Aquí puedes realizar la lógica para guardar los cambios en el backend
-  const nuevoPostulante = {
-    apellido: datosPostulante.apellido,
-    nombre: datosPostulante.nombre,
-    tel: datosPostulante.tel,
-    //cv: datosPostulante.cv,
-    pretencion_salarial: datosPostulante.pretencion_salarial,
-    comentario: datosPostulante.comentario
-  }
-  //console.log("datosPostulante",nuevoPostulante)
-  //console.log(codigo)
-  const data = await actualizarPostulante(codigo, nuevoPostulante, token)
-  //console.log("respuesta",data)
-  setRealizado('Cambios realizados');
-  setAsignarClickCount(asignarClickCount + 1);
-  setError(null);
-  }catch(error)
-  {
-    if (error.response && error.response.data) {
-      const mensajeError = error.response.data.error;
-      setError(mensajeError);
-    } else {
-      setError('Error al guardar los cambios.');
+    // Aquí puedes realizar la lógica para guardar los cambios en el backend
+    const nuevoPostulante = {
+      apellido: datosPostulante.apellido,
+      nombre: datosPostulante.nombre,
+      tel: datosPostulante.tel,
+      cv: cvCargado !== '' ? cvCargado : datosPostulante.cv,
+      pretencion_salarial: datosPostulante.pretencion_salarial,
+      comentario: datosPostulante.comentario
+    };
+    
+    //console.log("datosPostulante",nuevoPostulante)
+    //console.log(codigo)
+    const data = await actualizarPostulante(codigo, nuevoPostulante, token)
+    //console.log("respuesta",data)
+    setRealizado('Cambios realizados');
+    setAsignarClickCount(asignarClickCount + 1);
+    setError(null);
+     }catch(error){
+      if (error.response && error.response.data) {
+        const mensajeError = error.response.data.error;
+        setError(mensajeError);
+      } else {
+        setError('Error al guardar los cambios.');
+      }
+     }
+
+  setEditando(false);
+  setCvListo(false);
+};
+
+const handleCvChange = (event) => {
+  const file = event.target.files[0];
+  setUrl_cv(file);
+}
+
+//funcion para subir el cv
+const enviarCv = async () => {
+  try {
+    if (url_cv) {
+      const storageRef = ref(storage, `cv/${url_cv.name}`);
+      await uploadBytes(storageRef, url_cv);
+      console.log('archivo subido');
+
+      try {
+        const url = await getDownloadURL(storageRef);
+        console.log(`URL de descarga: ${url}`);
+        setCvCargado(url);
+        setCvListo(true);
+        
+      } catch (error) {
+        console.error(`Error al obtener la URL de descarga: ${error}`);
+      }
     }
+  } catch (error) {
+    setError('Hubo un error al subir el cv');
+    console.log('Error al registrar el usuario');
   }
 };
 
@@ -126,7 +171,7 @@ const nombresPersonalizados = {
   apellido: "Apellido",
   nombre: "Nombre",
   tel: "Teléfono",
-  cv: "CV",
+  cv: "Cv",
   pretencion_salarial: "Pretensión Salarial",
   comentario: "Comentario",
 };
@@ -154,12 +199,13 @@ const nombresPersonalizados = {
                 </Alert>
     )}
                   <Card.Title className="text-center">Datos personales</Card.Title>
+
                   <ListGroup>
                     {Object.keys(datosPostulante).map((key, index) => {
-                      if (["apellido", "nombre", "tel", "cv", "pretencion_salarial", "comentario"].includes(key)) {
+                      if (["apellido", "nombre", "cv", "tel", "pretencion_salarial", "comentario"].includes(key)) {
                         return (
                           <ListGroup.Item key={index} className="d-flex flex-column">
-                            <span>{nombresPersonalizados[key]} </span>
+                            <span>{nombresPersonalizados[key]}</span>
                             <input
                               type="text"
                               value={datosPostulante[key]}
@@ -172,6 +218,8 @@ const nombresPersonalizados = {
                       return null;
                     })}
                   </ListGroup>
+
+
 
           
                   <Button
@@ -187,7 +235,6 @@ const nombresPersonalizados = {
                     variant="success"
                     size="sm"
                     onClick={handleGuardarCambios}
-                    disabled={!editando}
                     style={{ margin: '10px auto', display: 'block' }}
                   >
                     Guardar Cambios
@@ -195,6 +242,7 @@ const nombresPersonalizados = {
                   <div className="d-flex justify-content-center mt-3">
                       <Link to="/cambiar-clave">Cambiar contraseña</Link>
                   </div>
+                
                 </Col>
                 <Col xs={12} md={6}>
                   <Card.Title className="text-center">Servicios</Card.Title>
@@ -228,6 +276,22 @@ const nombresPersonalizados = {
                   <br></br>
                   <Card.Text>Agregar nuevo servicio</Card.Text>
                   <AgregarServicioPostulante />
+                  <Form.Group className="mb-3" controlId="CV">
+              <Form.Label>Carga tu CV</Form.Label>
+              <Form.Control
+                type="file" 
+                onChange={handleCvChange}
+              />
+            </Form.Group>
+            <Button
+                    variant="success"
+                    size="sm"
+                    onClick={handleCargarCv}
+                    disabled={cvListo}
+                    style={{ margin: '10px auto', display: 'block' }}
+                  >
+                    Subir cv
+                  </Button>
                 </Col>
               </Row>
             </Card.Body>
