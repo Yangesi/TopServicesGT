@@ -90,8 +90,8 @@ export const AgregarServicioPostulante = () => {
             </option>
           ))}
         </Form.Select>
-        <Button variant="primary" onClick={handleGuardarServicio}>
-          Guardar Servicio
+        <Button className='mt-2' size="sm" variant="primary" onClick={handleGuardarServicio}>
+          Agregar Servicio
         </Button>
       </>
     )}

@@ -135,6 +135,12 @@ const handleCvChange = (event) => {
 const enviarCv = async () => {
   try {
     if (url_cv) {
+      // Validar el tipo de archivo
+      if (url_cv.type !== 'application/pdf') {
+        setError('Solo se pueden subir archivos PDF');
+        return;
+      }
+
       const storageRef = ref(storage, `cv/${url_cv.name}`);
       await uploadBytes(storageRef, url_cv);
       console.log('archivo subido');
@@ -144,7 +150,7 @@ const enviarCv = async () => {
         console.log(`URL de descarga: ${url}`);
         setCvCargado(url);
         setCvListo(true);
-        
+        setError(null);
       } catch (error) {
         console.error(`Error al obtener la URL de descarga: ${error}`);
       }
@@ -154,6 +160,7 @@ const enviarCv = async () => {
     console.log('Error al registrar el usuario');
   }
 };
+
 
 const handleInputChange = (key, value) => {
   setDatosPostulante((prevDatos) => ({
@@ -179,7 +186,7 @@ const nombresPersonalizados = {
 
 
   //console.log('datos del postulante',datosPostulante)
-  //console.log('datos de los servicios',datosServicios)
+  console.log('datos de los servicios',datosServicios)
   //console.log('cv', datosPostulante.cv)
 
   return (
@@ -218,9 +225,6 @@ const nombresPersonalizados = {
                       return null;
                     })}
                   </ListGroup>
-
-
-
           
                   <Button
                     variant="primary"
@@ -231,53 +235,50 @@ const nombresPersonalizados = {
                   >
                     Editar
                   </Button>
-                  <Button
-                    variant="success"
-                    size="sm"
-                    onClick={handleGuardarCambios}
-                    style={{ margin: '10px auto', display: 'block' }}
-                  >
-                    Guardar Cambios
-                  </Button>
-                  <div className="d-flex justify-content-center mt-3">
+                  
+                  <div className="d-flex justify-content-center mt-2">
                       <Link to="/cambiar-clave">Cambiar contraseña</Link>
                   </div>
                 
                 </Col>
                 <Col xs={12} md={6}>
-                  <Card.Title className="text-center">Servicios</Card.Title>
+                  <Card.Title className="text-center">Servicios adquiridos</Card.Title>
                   <ListGroup>
                     {datosServicios.map((servicio, index) => (
                       <ListGroup.Item key={index}>
-                        <div className="fw-bold">
+                        <div title='Tipo de servicio adquirido' className="fw-bold">
                           {servicio.tipo_servicio}
                         </div>
-                        <div>{servicio.nombre}</div>
+                        <div title='Nombre del servicio adquirido'>{servicio.nombre}</div>
                         {(() => {
                           const fecha = new Date(servicio.fecha_hora);
                           const fechaLegible =
                             fecha.toLocaleDateString('es-ES') +
                             ' ' +
                             fecha.toLocaleTimeString('es-ES');
-                          return <div>{fechaLegible}</div>;
+                          return <div title='Fecha en la que se adquirio el servicio'>{fechaLegible}</div>;
                         })()}
                         {(() => {
-                          const fecha = new Date(servicio.fecha_realizado);
-                          const fechaLegible =
-                            fecha.toLocaleDateString('es-ES') +
+                          if (servicio.fecha_realizado === null) {
+                            return <div title='Fecha en la que se realizo el servicio'>Fecha no disponible</div>;
+                          }
+                          const fechaa = new Date(servicio.fecha_realizado);
+                          const fechaLegiblee =
+                            fechaa.toLocaleDateString('es-ES') +
                             ' ' +
-                            fecha.toLocaleTimeString('es-ES');
-                          return <div>{fechaLegible}</div>;
+                            fechaa.toLocaleTimeString('es-ES');
+                          return <div title='Fecha en la que se realizo el servicio'>{fechaLegiblee}</div>;
                         })()}
                         {/* Puedes mostrar más propiedades del servicio según tus necesidades */}
                       </ListGroup.Item>
                     ))}
                   </ListGroup>
+
                   <br></br>
                   <Card.Text>Agregar nuevo servicio</Card.Text>
                   <AgregarServicioPostulante />
-                  <Form.Group className="mb-3" controlId="CV">
-              <Form.Label>Carga tu CV</Form.Label>
+                  <Form.Group className="mb-3 mt-3" controlId="CV">
+              <Form.Label>Carga tu CV en formato PDF</Form.Label>
               <Form.Control
                 type="file" 
                 onChange={handleCvChange}
@@ -298,6 +299,14 @@ const nombresPersonalizados = {
             <Card.Footer className="text-muted"></Card.Footer>
           </Card>
         </Col>
+        <Button
+                    variant="success"
+                    size="sm"
+                    onClick={handleGuardarCambios}
+                    style={{ margin: '10px auto', display: 'block' }}
+                  >
+                    Guardar Cambios
+                  </Button>
       </Row>
       
       <Row>

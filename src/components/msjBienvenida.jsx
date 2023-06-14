@@ -23,7 +23,7 @@ export function Saludo({ msj }) {
     <>
     <Row className="align-items-center">
   <Col>
-    <h3 style={{ marginLeft: '10px' }}>{saludo}{msj}</h3>
+    <h4 style={{ marginLeft: '10px' }}>{saludo}{msj}</h4>
   </Col>
 </Row>
 
