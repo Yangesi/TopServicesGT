@@ -89,20 +89,23 @@ export function PrimerFormulario({ show, handleClose, form2 }) {
               Clave incorrecta
             </Form.Control.Feedback>
           </Form.Group>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancelar
-          </Button>
-          <Button
-            variant="primary"
-            type="submit"
-            onClick={() => {
-              form2();
-              handleClose();
-            }}
-            disabled={!isFormValid}
-          >
-            Siguiente
-          </Button>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+            <Button variant="secondary" onClick={handleClose} style={{ marginRight: '0.5rem' }}>
+              Cancelar
+            </Button>
+            <Button
+              variant="primary"
+              type="submit"
+              onClick={() => {
+                form2();
+                handleClose();
+              }}
+              disabled={!isFormValid}
+            >
+              Siguiente
+            </Button>
+          </div>
+
         </Form>
       </Modal.Body>
     </Modal>

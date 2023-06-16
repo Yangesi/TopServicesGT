@@ -130,20 +130,23 @@ export function SegundoFormulario({ show, handleClose, form3 }) {
               Teléfono inválido
             </Form.Control.Feedback>
           </Form.Group>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancelar
-          </Button>
-          <Button
-            variant="primary"
-            type="submit"
-            onClick={() => {
-              form3();
-              handleClose();
-            }}
-            disabled={!isFormValid} // Deshabilita el botón si hay algún error
-          >
-            Siguiente
-          </Button>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+            <Button variant="secondary" onClick={handleClose} style={{ marginRight: '0.5rem' }}>
+              Cancelar
+            </Button>
+            <Button
+              variant="primary"
+              type="submit"
+              onClick={() => {
+                form3();
+                handleClose();
+              }}
+              disabled={!isFormValid} // Deshabilita el botón si hay algún error
+            >
+              Siguiente
+            </Button>
+          </div>
+
         </Form>
       </Modal.Body>
     </Modal>
