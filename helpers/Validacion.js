@@ -33,7 +33,7 @@ export function validarPassword(password) {
 }
 
 export function validarTel(tel) {
-  const regex = /^\+[0-9]{1,3}-[0-9]{1,14}$/;
+  const regex = /^\d{8}$/;
 
   return regex.test(tel);
 }

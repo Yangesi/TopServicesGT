@@ -95,23 +95,26 @@ export function PrimerFormularioP({ show, handleClose, form2 }) {
               isInvalid={!claveValida}
             />
             <Form.Control.Feedback type="invalid">
-              Clave incorrecta
+            Tu contraseña debe contener como minimo 8 carácteres incluyendo mayúsculas, numeros, y simbolos.
             </Form.Control.Feedback>
           </Form.Group>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancelar
-          </Button>
-          <Button
-            variant="primary"
-            type="submit"
-            onClick={() => {
-              form2();
-              handleClose();
-            }}
-            disabled={!isFormValid} // Deshabilita el botón si hay algún error
-          >
-            Siguiente
-          </Button>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+            <Button variant="secondary" onClick={handleClose} style={{ marginRight: '0.5rem' }}>
+              Cancelar
+            </Button>
+            <Button
+              variant="primary"
+              type="submit"
+              onClick={() => {
+                form2();
+                handleClose();
+              }}
+              disabled={!isFormValid} // Deshabilita el botón si hay algún error
+            >
+              Siguiente
+            </Button>
+          </div>
+
         </Form>
       </Modal.Body>
     </Modal>

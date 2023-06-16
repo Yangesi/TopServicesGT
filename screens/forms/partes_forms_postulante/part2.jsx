@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Modal, Form, Button } from "react-bootstrap";
+import { Modal, Form, Button, Alert } from "react-bootstrap";
 import { TokenContext } from '../../../src/components/context/contexto';
 import { useContext } from 'react';
 import { crearPostulante } from '../../../helpers/postulante'
@@ -17,7 +17,14 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
   const [comentario, setComentario] = useState('');
   const [cv, setCv] = useState('');
   const [url_cv, setUrl_cv] = useState(null);
-  const [error, setError] = useState(null);
+
+  //manejador de error y realizado
+  const [error, setError] = useState('');
+  const [realizado, setRealizado] = useState('');
+
+  const [isPdfFormatValid, setIsPdfFormatValid] = useState(true);
+  const [cvInputClassName, setCvInputClassName] = useState('');
+
 
   //estados de validaciones
   const [nombreError, setNombreError] = useState(false);
@@ -61,19 +68,30 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
 
   const handleCvChange = (event) => {
     const file = event.target.files[0];
+    
+      // Validar el formato del archivo
+      if (file && file.type !== 'application/pdf') {
+        setIsPdfFormatValid(false);
+        setCvInputClassName('invalid');
+      } else {
+        setIsPdfFormatValid(true);
+        setCvInputClassName('');
+      }
+    
     setUrl_cv(file);
   }
 
-  //validando el formulario 
   useEffect(() => {
     // Validar el formulario cuando cambien los valores de los campos
     setIsFormValid(
       nombreError &&
       apellidoError &&
       telError &&
-      pretension_salarialError
+      pretension_salarialError &&
+      (!url_cv || url_cv.type === 'application/pdf')
     );
-  }, [nombreError, apellidoError, telError, pretension_salarialError]);
+  }, [nombreError, apellidoError, telError, pretension_salarialError, url_cv]);
+  
   
   useEffect(() => {
     const envio = async() => {
@@ -102,6 +120,11 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Verificar si el archivo CV no está en formato PDF
+  if (url_cv && url_cv.type !== 'application/pdf') {
+    setError('Solo se pueden subir archivos con formato PDF');
+    return;
+  }
     // Aquí puedes agregar la lógica para enviar los datos del segundo formulario a la API
     enviarDatos();
   };
@@ -120,7 +143,7 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
           const url = await getDownloadURL(storageRef);
           console.log(`URL de descarga: ${url}`);
           setCv(url);
-
+          setError(null);
           
         } catch (error) {
           console.error(`Error al obtener la URL de descarga: ${error}`);
@@ -137,6 +160,11 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
         <Modal.Title>Ingresa tus datos</Modal.Title>
+        {error && (
+                <Alert variant="danger" className="mt-3">
+                  {error}
+                </Alert>
+    )}
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
@@ -186,12 +214,15 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="CV">
-              <Form.Label>Carga tu CV</Form.Label>
+              <Form.Label>Carga tu CV en formato pdf</Form.Label>
               <Form.Control
                 type="file" 
                 onChange={handleCvChange}
+                className={cvInputClassName}
               />
+              {!isPdfFormatValid && <p className="text-danger">Solo se pueden subir archivos con formato PDF</p>}
             </Form.Group>
+
             <Form.Group
               className="mb-3"
               controlId="exampleForm.ControlTextarea1"
@@ -204,14 +235,23 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
               onChange={handleComentarioChange}
               />
             </Form.Group>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancelar
-          </Button>
-          <Button variant="primary" type="submit" onClick={() => { form3(); handleClose(); }}
-          disabled={!isFormValid} // Deshabilita el botón si hay algún error
-          >
-            Siguiente
-          </Button>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+              <Button variant="secondary" onClick={handleClose} style={{ marginRight: '0.5rem' }}>
+                Cancelar
+              </Button>
+              <Button
+                variant="primary"
+                type="submit"
+                onClick={() => {
+                  form3();
+                  handleClose();
+                }}
+                disabled={!isFormValid} // Deshabilita el botón si hay algún error
+              >
+                Siguiente
+              </Button>
+            </div>
+
         </Form>
       </Modal.Body>
     </Modal>

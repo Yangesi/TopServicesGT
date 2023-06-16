@@ -75,12 +75,15 @@ export function TercerFormularioP({show, handleClose}) {
             ))}
             <p>Checkbox values: {checkboxValues.join(', ')}</p>
           </Form.Group>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancelar
-          </Button>
-          <Button variant="primary" type="submit">
-            Registrar
-          </Button>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+            <Button variant="secondary" onClick={handleClose} style={{ marginRight: '0.5rem' }}>
+              Cancelar
+            </Button>
+            <Button variant="primary" type="submit">
+              Registrar
+            </Button>
+          </div>
+
         </Form>
       </Modal.Body>
     </Modal>
