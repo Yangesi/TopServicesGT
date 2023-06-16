@@ -25,6 +25,7 @@ export const CambiarClave = () => {
   const navigate = useNavigate();
 
     const decodedToken = jwt_decode(token);
+    const codigo_rol = decodedToken.codigo_rol;
     const correo = decodedToken.email;
     console.log(correo)
   
@@ -70,7 +71,17 @@ export const CambiarClave = () => {
 
 //redireccionar el regreso 
 const handleRegresar = () => {
-  navigate('/postulante');
+  switch(codigo_rol){
+    case 1:
+  navigate('/admin');
+  break;
+  case 2:
+    navigate('/postulante');
+  break;
+  case 3:
+    navigate('/empleador');
+  break;
+  }
 };
   
     return (

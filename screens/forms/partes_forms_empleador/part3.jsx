@@ -5,10 +5,15 @@ import { TokenContext } from '../../../src/components/context/contexto';
 import { useContext } from 'react';
 import { crearServicioEmpleador } from '../../../helpers/servicioEmpleador'
 
+import { useNavigate, Link } from "react-router-dom";
+
 export function TercerFormulario({show, handleClose}) {
 
 //estados del contexto
     const { codigo, token } = useContext(TokenContext);
+
+    //hook navigate
+  const navigate = useNavigate();
 
     //estados de los servicios
     const [servicios, setServicios] = useState([]);
@@ -53,6 +58,11 @@ export function TercerFormulario({show, handleClose}) {
         enviarSeleccionServicios();
       };
 
+      //redireccionar el regreso 
+      const handleIniciarSesion = () => {
+        navigate('/empleador');
+      };
+
 
   return (
     <Modal show={show} onHide={handleClose}>
@@ -79,7 +89,7 @@ export function TercerFormulario({show, handleClose}) {
             <Button variant="secondary" onClick={handleClose} style={{ marginRight: '0.5rem' }}>
               Cancelar
             </Button>
-            <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit" onClick={handleIniciarSesion}>
               Registrar
             </Button>
           </div>
