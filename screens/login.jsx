@@ -7,7 +7,7 @@ import { iniciarSesion } from '../helpers/usuario'
 import { useNavigate, Link } from "react-router-dom";
 
 import { Container, Row, Col, Alert } from "react-bootstrap";
-import { Piedepagina } from '../src/components/viewsHome/piedepagina'
+import { Piedepagina } from '../src/components/viewsHome/piedepagina';
 
 export const Login = () => {  
 
@@ -50,6 +50,11 @@ export const Login = () => {
 
     setToken(datoToken);
     setCod_usuario(codigo);
+
+    //establecer el token en el localstorage
+    // Dentro de la función handleCerrarSesion o donde establezcas el token en el contexto
+    localStorage.setItem('token', datoToken);
+
 
     let redirect = '/';
     switch (codigo_rol) {

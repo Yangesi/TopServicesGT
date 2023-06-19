@@ -5,6 +5,7 @@ import { AgregarServicioEmpleador } from './componentesEmpleador/agregarServicio
 
 import { TokenContext } from '../../../src/components/context/contexto';
 import { useContext } from 'react';
+import jwt_decode from 'jwt-decode';
 
 //react bootstrap
 import { ListGroup, Button, Card, Col, Row } from 'react-bootstrap';
@@ -32,29 +33,31 @@ export const HomeEmpleador = () => {
   const [datosServicios, setDatosServicios] = useState([]);
   const { token, setToken, cod_usuario, setCodigo, codigo } = useContext(TokenContext);
 
-  useEffect(() => {
-    if (token) {
-      // Obtener los datos del empleador
-      const obtenerEmpleador = async () => {
-        const data = await obtenerEmpleadorPorCodigo(cod_usuario, token);
-        setDatosEmpleador(data);
-      };
-      obtenerEmpleador();
-    } else {
-      // Redireccionar a la página de inicio de sesión
-      console.log('No existe el token');
-      // Redirigir a la página de inicio de sesión
-      let redirect = '/login';
-      navigate(redirect);
-    }
-  }, [token]);
+    //implementando localstorage para guardar el token
+    useEffect(() => {
+      // Obtener el token almacenado en el localStorage al cargar la página
+      const storedToken = localStorage.getItem('token');
+      if (storedToken) {
+        setToken(storedToken);
 
-  //function para cerrar sesion
-  const handleCerrarSesion = () => {
-    // Eliminar el token estableciéndolo como una cadena vacía o null
-    setToken('');
-  
-  };
+        const decodedToken = jwt_decode(storedToken);
+        const codigo_usuario = decodedToken.code;
+
+            // Obtener los datos del empleador
+    const obtenerEmpleador = async () => {
+      
+      const data = await obtenerEmpleadorPorCodigo(codigo_usuario, storedToken);
+      setDatosEmpleador(data);
+    };
+      obtenerEmpleador();
+
+      } else {
+        // Redireccionar a la página de inicio de sesión si no hay token en el localStorage
+        console.log('No existe el token');
+        let redirect = '/login';
+        navigate(redirect);
+      }
+    }, []);
   
   useEffect(() => {
     if (datosEmpleador.codigo) {

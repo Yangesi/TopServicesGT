@@ -28,7 +28,10 @@ export const TarjetasServicios = () => {
   const [serviciosPostulante, setServiciosPostulante] = useState([])
 
   //contexto
-  const { token } = useContext(TokenContext);
+  const { token, setToken } = useContext(TokenContext);
+
+  const storedToken = localStorage.getItem('token');
+  setToken(storedToken);
 
   //select seleccionados
   const [tipoSeleccionado, setTipoSeleccionado] = useState('');
@@ -69,7 +72,7 @@ const [asignarClickCount, setAsignarClickCount] = useState(0);
 
   useEffect(() => {
     const obtenerServiciosEmpleadorNoRealizados = async () => {
-        const data = await getServiciosEmpleadorNoRealizado(codigoServicioSeleccionado, token);
+        const data = await getServiciosEmpleadorNoRealizado(codigoServicioSeleccionado, storedToken);
         setServiciosEmpleadorNo(data);
       };
       obtenerServiciosEmpleadorNoRealizados();
@@ -78,7 +81,7 @@ const [asignarClickCount, setAsignarClickCount] = useState(0);
 
   useEffect(() => {
     const obtenerServiciosEmpleadorRealizado = async () => {
-        const data = await getServiciosEmpleadorPorCodigoServicio(codigoServicioSeleccionado, token);
+        const data = await getServiciosEmpleadorPorCodigoServicio(codigoServicioSeleccionado, storedToken);
         setServiciosEmpleadorSi(data);
       };
       obtenerServiciosEmpleadorRealizado();
@@ -88,7 +91,7 @@ const [asignarClickCount, setAsignarClickCount] = useState(0);
   useEffect(() => {
 
     const obtenerPostulantesPorCodigoServicio = async () => {
-      const data = await getServiciosPostulantesPorCodigoServicio(codigoServicioSeleccionado, token);
+      const data = await getServiciosPostulantesPorCodigoServicio(codigoServicioSeleccionado, storedToken);
       setServiciosPostulante(data);
     };
     obtenerPostulantesPorCodigoServicio();    
@@ -109,7 +112,7 @@ const [asignarClickCount, setAsignarClickCount] = useState(0);
         id_servicio_postulante: seleccionPostulante
       };
 
-      const data = await actualizarServicioEmpleador(seleccionEmpleador, servicioEmpleador, token);
+      const data = await actualizarServicioEmpleador(seleccionEmpleador, servicioEmpleador, storedToken);
 
       const servicioPostulante = {
         realizado: 1, 
@@ -118,7 +121,7 @@ const [asignarClickCount, setAsignarClickCount] = useState(0);
 
       
       //pendiente de revisar
-      const data2 = await actualizarServicioPostulante(seleccionPostulante, servicioPostulante, token);
+      const data2 = await actualizarServicioPostulante(seleccionPostulante, servicioPostulante, storedToken);
       
       //console.log('servicioPostulante',data2);
       setAsignarClickCount(asignarClickCount + 1);
@@ -165,8 +168,8 @@ const [asignarClickCount, setAsignarClickCount] = useState(0);
       fecha_realizado: null
     }
 
-    const respuestaP = await actualizarServicioPostulante(idServicioPostulante, actualizarServicioP, token);
-    const respuestaE = await actualizarServicioEmpleador(id, actualizarServicioE, token);
+    const respuestaP = await actualizarServicioPostulante(idServicioPostulante, actualizarServicioP, storedToken);
+    const respuestaE = await actualizarServicioEmpleador(id, actualizarServicioE, storedToken);
 
     setAsignarClickCount(asignarClickCount + 1);
     setRealizado('Eliminación realizada');

@@ -23,7 +23,9 @@ export const NuevoServicio = () => {
   const [textInput, setTextInput] = useState('');
 
   //contexto
-  const { token } = useContext(TokenContext);
+  const { token, setToken } = useContext(TokenContext);
+  const storedToken = localStorage.getItem('token');
+  setToken(storedToken);
 
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value);
@@ -39,7 +41,7 @@ export const NuevoServicio = () => {
         nombre: textInput
       }
 
-      const data = await crearServicio(servicioNuevo, token)
+      const data = await crearServicio(servicioNuevo, storedToken)
       console.log(data)
   }
 

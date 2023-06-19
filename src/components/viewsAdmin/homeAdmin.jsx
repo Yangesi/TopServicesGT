@@ -30,47 +30,35 @@ export const HomeAdmin = () => {
   
   const { token, setToken } = useContext(TokenContext);
 
+  //implementando localstorage para guardar el token
   useEffect(() => {
-    if (token) {
+    // Obtener el token almacenado en el localStorage al cargar la página
+    const storedToken = localStorage.getItem('token');
+    if (storedToken) {
+      setToken(storedToken);
+
       //obtener lista de empleadores
       const getListaEmpleadores = async () => {
 
-        const data = await obtenerListaEmpleadores(token);
+        const data = await obtenerListaEmpleadores(storedToken);
         setListaEmpleadores(data);
       };
       getListaEmpleadores();
 //obtener lista de postulantes
       const getListaPostulantes = async () => {
 
-        const data = await getPostulantes(token);
+        const data = await getPostulantes(storedToken);
         setListaPostulantes(data);
       }; 
       getListaPostulantes();
 
-      //obtener lista de empleadores por codigo de servicio
-      const obtenerEmpleadoresPorCodigoS = async () => {
-        //const data = await getServiciosEmpleadorPorCodigoServicio();
-        //setListaEmpleadoresPorCodigoS(data);
-      };
-      obtenerEmpleadoresPorCodigoS();
-
-      console.log('existe')
     } else {
-      // redireccionar a la página de inicio de sesión
-      console.log('no existe')
-      // Redirigir a la página de inicio de sesión
+      // Redireccionar a la página de inicio de sesión si no hay token en el localStorage
+      console.log('No existe el token');
       let redirect = '/login';
       navigate(redirect);
     }
-    
-  }, [token]);
-
-  
-
-  //console.log(listaEmpleadores)
-  //console.log(listaPostulantes)
-  //console.log(serviciosPostulantes)
-  console.log(token)
+  }, []);
 
   return (
     <>

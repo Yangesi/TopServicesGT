@@ -3,15 +3,24 @@ import { Navbar, Nav } from 'react-bootstrap';
 import { Outlet, Link } from 'react-router-dom';
 import { TokenContext } from '../../../src/components/context/contexto';
 import { FaPowerOff } from 'react-icons/fa';
+import { useNavigate } from "react-router-dom";
 
 export const Encabezado = () => {
   const { token, setToken } = useContext(TokenContext);
   const isLoggedIn = !!token;
 
+    //hook navigate
+    const navigate = useNavigate();
+
   //function para cerrar sesion
    const handleCerrarSesion = () => {
     // Eliminar el token estableciéndolo como una cadena vacía o null
+    localStorage.removeItem('token');
+
     setToken('');
+
+    let redirect = '/login';
+    navigate(redirect);
     
    };
 

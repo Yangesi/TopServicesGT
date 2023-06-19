@@ -14,7 +14,9 @@ export const EditarServicio = () => {
   const [nombre, setNombre] = useState('');
 
   //contexto
-  const { token } = useContext(TokenContext);
+  const { token, setToken } = useContext(TokenContext);
+  const storedToken = localStorage.getItem('token');
+  setToken(storedToken);
 
   //manejador de error y realizado
   const [error, setError] = useState('');
@@ -54,7 +56,7 @@ const [asignarClickCount, setAsignarClickCount] = useState(0);
         nombre
     }
 
-    const data = await actualizarServicio(codigoServicio, actualizarServicioo, token)
+    const data = await actualizarServicio(codigoServicio, actualizarServicioo, storedToken)
     console.log(data)
 
     setAsignarClickCount(asignarClickCount + 1);

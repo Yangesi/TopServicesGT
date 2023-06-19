@@ -17,7 +17,8 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 //react bootstrap
 import { ListGroup, Button, Card, Col, Form, Row, Alert } from 'react-bootstrap';
-import logoP from '../../../src/logo/logoP.jpg'
+import logoP from '../../../src/logo/logoP.jpg';
+import jwt_decode from 'jwt-decode';
 
 export const HomePostulante = () => {
 
@@ -48,29 +49,34 @@ export const HomePostulante = () => {
 //contador de clicks para actualizar los useffect
 const [asignarClickCount, setAsignarClickCount] = useState(0);
 
-  useEffect(() => {
-    if (token) {
-      // Obtener los datos del postulante
+//implementando localstorage para guardar el token
+useEffect(() => {
+  // Obtener el token almacenado en el localStorage al cargar la página
+  const storedToken = localStorage.getItem('token');
+  if (storedToken) {
+    setToken(storedToken);
+
+    const decodedToken = jwt_decode(storedToken);
+    const codigo_usuario = decodedToken.code;
+
+        // Obtener los datos del postulante
       const obtenerPostulante = async () => {
         console.log(cod_usuario);
         console.log(token);
-        const data = await getPostulantePorCodigo(cod_usuario, token);
+        const data = await getPostulantePorCodigo(codigo_usuario, storedToken);
         setDatosPostulante(data);
         // Establecer el código del postulante
         setCodigo(data.codigo);
       };
       obtenerPostulante();
-  
-      console.log('existe');
-    } else {
-      // Redireccionar a la página de inicio de sesión
-      console.log('no existe');
-      // Redirigir a la página de inicio de sesión
-      let redirect = '/login';
-      navigate(redirect);
-      
-    }
-  }, [token, cod_usuario, asignarClickCount]);
+
+  } else {
+    // Redireccionar a la página de inicio de sesión si no hay token en el localStorage
+    console.log('No existe el token');
+    let redirect = '/login';
+    navigate(redirect);
+  }
+}, []);
   
   useEffect(() => {
     if (codigo && token) {
