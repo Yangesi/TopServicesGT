@@ -66,9 +66,9 @@ export function SegundoFormulario({ show, handleClose, form3 }) {
 
     const respuestaEmpleador = await crearDatosEmpleador(datosEmpleador, token);
 
-    console.log(respuestaEmpleador);
+    //console.log(respuestaEmpleador);
     const datoCodEmpleador = respuestaEmpleador.codigo;
-    console.log(datoCodEmpleador);
+    //console.log(datoCodEmpleador);
     setCodigo(datoCodEmpleador);
   };
   

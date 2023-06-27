@@ -85,7 +85,7 @@ const [asignarClickCount, setAsignarClickCount] = useState(0);
         setServiciosEmpleadorSi(data);
       };
       obtenerServiciosEmpleadorRealizado();
-      console.log('si',serviciosEmpleadorSi)
+      //console.log('si',serviciosEmpleadorSi)
   }, [codigoServicioSeleccionado, asignarClickCount])
   
   useEffect(() => {
@@ -152,9 +152,9 @@ const [asignarClickCount, setAsignarClickCount] = useState(0);
     const id = servicio.id;
     const idServicioPostulante = servicio.id_servicio_postulante;
 
-    console.log(id)
-    console.log(idServicioPostulante)
-    console.log(token)
+    //console.log(id)
+    //console.log(idServicioPostulante)
+    //console.log(token)
     // Realizar la lógica para eliminar el servicio en la posición index
     // Puedes utilizar el índice para acceder al servicio específico dentro del array serviciosEmpleadorSi
     const actualizarServicioE = {
@@ -175,8 +175,8 @@ const [asignarClickCount, setAsignarClickCount] = useState(0);
     setRealizado('Eliminación realizada');
     
 
-    console.log(respuestaE)
-    console.log(respuestaP)
+    //console.log(respuestaE)
+    //console.log(respuestaP)
   
 
   };

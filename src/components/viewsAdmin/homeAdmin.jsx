@@ -54,7 +54,7 @@ export const HomeAdmin = () => {
 
     } else {
       // Redireccionar a la página de inicio de sesión si no hay token en el localStorage
-      console.log('No existe el token');
+      //console.log('No existe el token');
       let redirect = '/login';
       navigate(redirect);
     }

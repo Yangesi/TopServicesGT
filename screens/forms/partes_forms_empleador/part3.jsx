@@ -46,7 +46,7 @@ export function TercerFormulario({show, handleClose}) {
             codigo_empleador: codigo,
             codigo_servicio
           }
-          console.log(nuevoServicio)
+          //console.log(nuevoServicio)
           await crearServicioEmpleador(nuevoServicio, token);
         });
       };

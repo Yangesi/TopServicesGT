@@ -34,11 +34,11 @@ const [asignarClickCount, setAsignarClickCount] = useState(0);
     //tengo que ejecutar este useeffect cada vez que se guarden cambios al editar un servicio
   }, [codigoServicio, asignarClickCount]);
 
-  console.log(servicios);
+  //console.log(servicios);
 
   const handleEditarServicio = (codigo, codigoTipoServicio, nombre) => {
     // Aquí puedes realizar las acciones deseadas con el código y el código_tipo_servicio
-    console.log(`Editar servicio con código ${codigo} y código de tipo de servicio ${codigoTipoServicio}`);
+    //console.log(`Editar servicio con código ${codigo} y código de tipo de servicio ${codigoTipoServicio}`);
     setCodigoServicio(codigo);
     setCodigoTipoServicio(codigoTipoServicio);
     setNombre(nombre);
@@ -46,9 +46,9 @@ const [asignarClickCount, setAsignarClickCount] = useState(0);
 
   const handleGuardarCambios = async () => {
     // Aquí puedes realizar las acciones para guardar los cambios
-    console.log('Guardar cambios');
-    console.log('Código de tipo de servicio:', codigoTipoServicio);
-    console.log('Nombre:', nombre);
+    //console.log('Guardar cambios');
+    //console.log('Código de tipo de servicio:', codigoTipoServicio);
+    //console.log('Nombre:', nombre);
 
     try{
     const actualizarServicioo = {
@@ -57,7 +57,7 @@ const [asignarClickCount, setAsignarClickCount] = useState(0);
     }
 
     const data = await actualizarServicio(codigoServicio, actualizarServicioo, storedToken)
-    console.log(data)
+    //console.log(data)
 
     setAsignarClickCount(asignarClickCount + 1);
     setRealizado('Asignación realizada');

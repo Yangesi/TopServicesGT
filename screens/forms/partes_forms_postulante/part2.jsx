@@ -105,13 +105,13 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
       tel
     };
 
-    console.log('probando mi cv', datosPostulante);
+    //console.log('probando mi cv', datosPostulante);
 
     const respuestaPostulante = await crearPostulante(datosPostulante, token);
 
-    console.log(respuestaPostulante);
+    //console.log(respuestaPostulante);
     const datoCodPostulante = respuestaPostulante.codigo;
-    console.log(datoCodPostulante);
+    //console.log(datoCodPostulante);
     setCodigo(datoCodPostulante);
   }
     envio();

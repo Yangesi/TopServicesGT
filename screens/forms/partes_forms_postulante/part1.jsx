@@ -43,7 +43,7 @@ export function PrimerFormularioP({ show, handleClose, form2 }) {
 
       const respuestaPostulante = await crearPostulante(nuevoPostulante);
 
-      console.log(respuestaPostulante);
+      //console.log(respuestaPostulante);
       const datoToken = respuestaPostulante.token;
       const datoCodUsuario = respuestaPostulante.codigo;
 

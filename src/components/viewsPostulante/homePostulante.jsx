@@ -61,8 +61,8 @@ useEffect(() => {
 
         // Obtener los datos del postulante
       const obtenerPostulante = async () => {
-        console.log(cod_usuario);
-        console.log(token);
+        //console.log(cod_usuario);
+        //console.log(token);
         const data = await getPostulantePorCodigo(codigo_usuario, storedToken);
         setDatosPostulante(data);
         // Establecer el código del postulante
@@ -72,7 +72,7 @@ useEffect(() => {
 
   } else {
     // Redireccionar a la página de inicio de sesión si no hay token en el localStorage
-    console.log('No existe el token');
+    //console.log('No existe el token');
     let redirect = '/login';
     navigate(redirect);
   }
@@ -192,7 +192,7 @@ const nombresPersonalizados = {
 
 
   //console.log('datos del postulante',datosPostulante)
-  console.log('datos de los servicios',datosServicios)
+  //console.log('datos de los servicios',datosServicios)
   //console.log('cv', datosPostulante.cv)
 
   return (

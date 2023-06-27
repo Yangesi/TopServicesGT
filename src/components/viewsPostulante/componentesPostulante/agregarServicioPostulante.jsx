@@ -61,7 +61,7 @@ export const AgregarServicioPostulante = () => {
 
     //console.log(crearServicioE)
     const data = await crearServicioPostulante(crearServicioP, token)
-    console.log(data)
+    //console.log(data)
   };
 
   return (

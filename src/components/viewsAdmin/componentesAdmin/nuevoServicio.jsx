@@ -42,7 +42,7 @@ export const NuevoServicio = () => {
       }
 
       const data = await crearServicio(servicioNuevo, storedToken)
-      console.log(data)
+      //console.log(data)
   }
 
   const handleSubmit = (event) => {

@@ -48,7 +48,7 @@ export function TercerFormularioP({show, handleClose}) {
             codigo_postulante: codigo,
             codigo_servicio
           }
-          console.log(nuevoServicio)
+          //console.log(nuevoServicio)
           await crearServicioPostulante(nuevoServicio, token);
         });
       };

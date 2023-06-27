@@ -41,7 +41,7 @@ export function PrimerFormulario({ show, handleClose, form2 }) {
 
       const respuestaEmpleador = await crearEmpleador(nuevoEmpleador);
 
-      console.log(respuestaEmpleador);
+      //console.log(respuestaEmpleador);
       const datoToken = respuestaEmpleador.token;
       const datoCodUsuario = respuestaEmpleador.codigo;
 

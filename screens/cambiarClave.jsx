@@ -27,7 +27,7 @@ export const CambiarClave = () => {
     const decodedToken = jwt_decode(token);
     const codigo_rol = decodedToken.codigo_rol;
     const correo = decodedToken.email;
-    console.log(correo)
+    //console.log(correo)
   
     const handleChangeOldPassword = (e) => {
       setOldPassword(e.target.value);
@@ -41,8 +41,8 @@ export const CambiarClave = () => {
       e.preventDefault();
   
       // Aquí puedes agregar la lógica para cambiar la contraseña utilizando los valores de oldPassword y newPassword
-      console.log('Contraseña antigua:', oldPassword);
-      console.log('Contraseña nueva:', newPassword);
+      //console.log('Contraseña antigua:', oldPassword);
+      //console.log('Contraseña nueva:', newPassword);
 
       try{
       const datosClave = {
@@ -53,7 +53,7 @@ export const CambiarClave = () => {
 
       //console.log(datosClave)
       const data = await cambiarClaveAntigua(datosClave, token)
-      console.log(data)
+      //console.log(data)
       // Restablecer los campos del formulario
       setOldPassword('');
       setNewPassword('');

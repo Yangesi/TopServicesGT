@@ -69,8 +69,8 @@ export const RecuperarClave = () => {
     
       const handleEnviarClick = async () => {
         // Aquí puedes realizar la lógica para enviar el código y la contraseña
-        console.log("Código:", codigoRecuperacion);
-        console.log("Contraseña:", nuevaClave);
+        //console.log("Código:", codigoRecuperacion);
+        //console.log("Contraseña:", nuevaClave);
       
         /* const cambiarClavee = {
           codigoRecuperacion: 83297,
@@ -82,10 +82,10 @@ export const RecuperarClave = () => {
             nuevaClave
           };
 
-        console.log(cambiarClavee)
+        //console.log(cambiarClavee)
         try{
         const data = await cambiarContrasena(cambiarClavee);
-        console.log(data);
+        //console.log(data);
         let redirect = '/login';
         navigate(redirect);
         }
