@@ -83,7 +83,7 @@ export function TercerFormulario({show, handleClose}) {
                 onChange={handleCheckboxChange}
               />
             ))}
-            <p>Checkbox values: {checkboxValues.join(', ')}</p>
+            
           </Form.Group>
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
             <Button variant="secondary" onClick={handleClose} style={{ marginRight: '0.5rem' }}>
