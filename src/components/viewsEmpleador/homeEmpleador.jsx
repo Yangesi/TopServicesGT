@@ -177,17 +177,17 @@ const nombresPersonalizados = {
             <ListGroup>
               {datosServicios.map((servicio, index) => (
                 <ListGroup.Item key={index}>
-                  <div className="fw-bold">
+                  <div title='Tipo de servicio adquirido' className="fw-bold">
                     {servicio.tipo_servicio}
                   </div>
-                  <div>{servicio.nombre}</div>
+                  <div title='Nombre del servicio adquirido'>{servicio.nombre}</div>
                   {(() => {
                     const fecha = new Date(servicio.fecha_hora);
                     const fechaLegible =
                       fecha.toLocaleDateString('es-ES') +
                       ' ' +
                       fecha.toLocaleTimeString('es-ES');
-                    return <div>{fechaLegible}</div>;
+                    return <div title='Fecha en la que se adquirio el servicio'>{fechaLegible}</div>;
                   })()}
                   {(() => {
                     const fecha = new Date(servicio.fecha_realizado);
@@ -195,7 +195,7 @@ const nombresPersonalizados = {
                       fecha.toLocaleDateString('es-ES') +
                       ' ' +
                       fecha.toLocaleTimeString('es-ES');
-                    return <div>{fechaLegible}</div>;
+                    return <div title='Fecha en la que se realizo el servicio'>{fechaLegible}</div>;
                   })()}
                   {/* Puedes mostrar más propiedades del servicio según tus necesidades */}
                 </ListGroup.Item>
