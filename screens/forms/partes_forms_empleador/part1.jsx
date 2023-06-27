@@ -86,7 +86,7 @@ export function PrimerFormulario({ show, handleClose, form2 }) {
               isInvalid={!claveValida}
             />
             <Form.Control.Feedback type="invalid">
-              Clave incorrecta
+            Tu contraseña debe contener como minimo 8 carácteres incluyendo mayúsculas, numeros, y simbolos.
             </Form.Control.Feedback>
           </Form.Group>
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
