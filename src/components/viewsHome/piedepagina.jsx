@@ -9,8 +9,8 @@ export const Piedepagina = () => {
     <footer className="bg-light mt-5 py-3">
       <div className="container">
         <p className="text-center">Copyright &copy; Sistema Web 2023</p>
-        <p className="text-center">Contactanos +502 5935-7232, Ciudad de Guatemala</p>
-        <p className="text-center">Encuentranos en nuestras redes sociales</p>
+        <p className="text-center">Contáctanos +502 5935-7232, Ciudad de Guatemala</p>
+        <p className="text-center">Encuéntranos en nuestras redes sociales</p>
         <p className="text-center">
         <ul className="list-inline">
         <li className="list-inline-item">
