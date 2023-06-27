@@ -215,7 +215,7 @@ const nombresPersonalizados = {
 
                   <ListGroup>
                     {Object.keys(datosPostulante).map((key, index) => {
-                      if (["apellido", "nombre", "cv", "tel", "pretencion_salarial", "comentario"].includes(key)) {
+                      if (["apellido", "nombre", "tel", "pretencion_salarial", "comentario"].includes(key)) {
                         return (
                           <ListGroup.Item key={index} className="d-flex flex-column">
                             <span>{nombresPersonalizados[key]}</span>
