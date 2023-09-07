@@ -159,7 +159,7 @@ export function SegundoFormularioP({ show, handleClose, form3 }) {
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Ingresa tus datos</Modal.Title>
+        <Modal.Title>Ingresa tus datos personales</Modal.Title>
         {error && (
                 <Alert variant="danger" className="mt-3">
                   {error}

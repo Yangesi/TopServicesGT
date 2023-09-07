@@ -57,7 +57,7 @@ export function PrimerFormulario({ show, handleClose, form2 }) {
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Iniciar sesión</Modal.Title>
+        <Modal.Title>Datos de usuario</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>

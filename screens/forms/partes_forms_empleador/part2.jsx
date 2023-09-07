@@ -75,7 +75,7 @@ export function SegundoFormulario({ show, handleClose, form3 }) {
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Ingresa tus datos</Modal.Title>
+        <Modal.Title>Ingresa tus datos personales</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
